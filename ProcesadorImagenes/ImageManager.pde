@@ -1,12 +1,15 @@
-public class ImageManager
+public class ImageProcessor
 {
   PImage base;
   PImage processed;
   
-  public ImageManager()
+  BaseFilter currentFilter;
+  
+  public ImageProcessor()
   {
     base = loadImage("../sample.jpg");
     processed = loadImage("../sample.jpg");
+    currentFilter = new GrayScaleFilter();
   }
   
   public void DrawImages()
@@ -19,6 +22,11 @@ public class ImageManager
     {
       image(processed, ((width - base.width)/2) + 10, 60, (width - processed.width) * 0.5, (height - processed.height) * 0.5);
     }
+  }
+  
+  public void Apply()
+  {
+    currentFilter.ProcessImage(base, processed);
   }
   
   ///// GETTERS

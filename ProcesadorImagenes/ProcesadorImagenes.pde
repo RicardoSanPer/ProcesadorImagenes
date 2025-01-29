@@ -1,8 +1,8 @@
 import controlP5.*;
 
 ControlP5 p5;
-ProcesadorUI ui;
-ImageManager img;
+UIManager ui;
+ImageProcessor img;
 
 void setup()
 {
@@ -10,8 +10,8 @@ void setup()
   
   p5 = new ControlP5(this);
   
-  img = new ImageManager();
-  ui = new ProcesadorUI(p5);
+  img = new ImageProcessor();
+  ui = new UIManager(p5);
 }
 
 void draw()
@@ -20,9 +20,11 @@ void draw()
   img.DrawImages();
 }
 
-void test()
+
+void ApplyProcessing()
 {
-  println("test");
+  //Aplicar filtro
+  img.Apply();
 }
 
 

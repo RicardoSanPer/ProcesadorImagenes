@@ -5,17 +5,19 @@
 *
 */
 
-public class ProcesadorUI
+public class UIManager
 {
   ControlP5 cp5;
   Button loadImageButton;
   Button saveImageButton;
+  Button applyFilterButton;
   
-  public ProcesadorUI(ControlP5 cp5)
+  public UIManager(ControlP5 cp5)
   {
     this.cp5 = cp5;
     loadImageButton = new Button(p5, "Cargar Imagen");
     saveImageButton = new Button(p5, "Guardar Imagen");
+    applyFilterButton = new Button(p5, "Aplicar");
     
     //Boton para cargar imagen
     loadImageButton.setLabel("Cargar Imagen");
@@ -31,6 +33,13 @@ public class ProcesadorUI
     saveImageButton.setSize(100, 30);
     
     saveImageButton.onClick(event -> SaveProcessed());
+    
+    //Boton para guardar imagen
+    applyFilterButton.setLabel("Processar Filtro");
+    applyFilterButton.setPosition(230,10);
+    applyFilterButton.setSize(100, 30);
+    
+    applyFilterButton.onClick(event -> ApplyProcessing());
   }
   
 }
