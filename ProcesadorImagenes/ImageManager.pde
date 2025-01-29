@@ -1,17 +1,28 @@
+/**
+*  Clase encargada de procesar la imagen
+*
+*/
+
+import java.util.ArrayList;
+
 public class ImageProcessor
 {
-  PImage base;
-  PImage processed;
+  PImage base;        //Imagen a procesar
+  PImage processed;   //Imagen procesada
   
-  BaseFilter currentFilter;
+  ArrayList<BaseFilter> filtros;
   
   public ImageProcessor()
   {
     base = loadImage("../sample.jpg");
     processed = loadImage("../sample.jpg");
-    currentFilter = new GrayScaleFilter();
+    //Lista de filtros
+    filtros = new ArrayList<BaseFilter>();
   }
   
+  /**
+  *  Dibuja la imagen y el resultado del procesamiento
+  */
   public void DrawImages()
   {
     if(base != null)
@@ -23,10 +34,37 @@ public class ImageProcessor
       image(processed, ((width - base.width)/2) + 10, 60, (width - processed.width) * 0.5, (height - processed.height) * 0.5);
     }
   }
-  
-  public void Apply()
+  /**
+  * Aplica un filtro actual a la imagen
+  * @param seleccion Numero de filtro a aplicar
+  */
+  public void Apply(int seleccion)
   {
-    currentFilter.ProcessImage(base, processed);
+    if(seleccion < 0 || seleccion >= filtros.size())
+    {
+      return;
+    }
+    filtros.get(seleccion).ProcessImage(base, processed);
+  }
+  
+  
+  /**
+  *  Agrega un filtro a la lista de filtros disponibles
+  *  
+  *  @param filtro filtro a agregar
+  */
+  public void addFilter(BaseFilter filtro)
+  {
+    if(filtros == null)
+    {
+      filtros = new ArrayList<BaseFilter>();
+    }
+    filtros.add(filtro);
+  }
+  
+  public ArrayList<BaseFilter> GetFilterList()
+  {
+    return filtros;
   }
   
   ///// GETTERS
@@ -40,13 +78,23 @@ public class ImageProcessor
   {
     return processed;
   }
-  
+   
+  /**
+  *  Carga una imagen para ser procesada
+  *
+  *  @param path ubicacion absoluta del archivo
+  */
   public void LoadImage(String path)
   {
     base = loadImage(path);
     processed = loadImage(path);
   }
   
+   /*
+   *  Guarda la imagen procesada en el sistema
+   *  
+   *  @param path ubicacion absoluta del destino del archivo
+   */
   public void SaveProcessed(String path)
   {
     processed.save(path);

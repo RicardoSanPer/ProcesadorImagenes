@@ -12,6 +12,8 @@ void setup()
   
   img = new ImageProcessor();
   ui = new UIManager(p5);
+  
+  setupFilters();
 }
 
 void draw()
@@ -21,20 +23,35 @@ void draw()
 }
 
 
+//Aplicar el procesado de la imagen
 void ApplyProcessing()
 {
-  //Aplicar filtro
-  img.Apply();
+  //Aplicar el filtro actualmente seleccionado
+  img.Apply(ui.GetCurrentSelectedFilter());
+}
+
+void setupFilters()
+{
+  //Inicializar filtros
+  img.addFilter(new GrayScaleFilter());
+  img.addFilter(new RedFilter());
+  img.addFilter(new GreenFilter());
+  img.addFilter(new BlueFilter());
+  
+  //Agregarlos a la ui
+  ui.AddFilterList(img.GetFilterList());
 }
 
 
 //// I/O DE IMAGENES
   
+//Cargar imagen
 void LoadImage()
 {
   selectInput("Elige una imagen a procesar", "validateInput");
 }
 
+//Validar la seleccion de archivo a cargar
 void validateInput(File input)
 {
   if(input == null)
@@ -45,11 +62,13 @@ void validateInput(File input)
   img.LoadImage(input.getAbsolutePath());
 }
 
+//Guardar imagen
 void SaveProcessed()
 {
   selectOutput("Elige donde guardar la imagen procesada", "validateOutput");
 }
 
+//Validar destino de guardado
 void validateOutput(File output)
 {
   if(output == null)
