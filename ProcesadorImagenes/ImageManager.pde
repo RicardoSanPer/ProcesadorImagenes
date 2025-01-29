@@ -40,6 +40,10 @@ public class ImageProcessor
   */
   public void Apply(int seleccion)
   {
+    if(filtros.size() < 0)
+    {
+      return;
+    }
     if(seleccion < 0 || seleccion >= filtros.size())
     {
       return;
@@ -47,6 +51,19 @@ public class ImageProcessor
     filtros.get(seleccion).ProcessImage(base, processed);
   }
   
+  /**
+  *  Cambia la UI para mostrar los controles del filtro actualmente seleccionado
+  *
+  *  @param i indice del filtro cuyos controles se van a mostrar
+  */
+  public void SwitchUI(int i)
+  {
+    for(BaseFilter f : filtros)
+    {
+      f.HideControls();
+    }
+    filtros.get(i).ShowControls();
+  }
   
   /**
   *  Agrega un filtro a la lista de filtros disponibles
@@ -62,6 +79,10 @@ public class ImageProcessor
     filtros.add(filtro);
   }
   
+  /**
+  * Regresa la lista de filtros
+  * @retun lista de filtros
+  */
   public ArrayList<BaseFilter> GetFilterList()
   {
     return filtros;

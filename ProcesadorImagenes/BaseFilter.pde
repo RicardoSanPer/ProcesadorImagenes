@@ -5,6 +5,8 @@ public abstract class BaseFilter
   protected int imageWidth;
   protected int imageHeight;
   
+  protected Group controls;
+  
   public BaseFilter(){}
   
   public BaseFilter(String name)
@@ -40,6 +42,31 @@ public abstract class BaseFilter
   }
   
   /**
+  *  Inicializa grupos para que los filtros puedan crear sus propios controles de UI
+  *  @param cp5 ControlP5 de la ui
+  */
+  public void StartControls(ControlP5 cp5)
+  {
+    controls = new Group(cp5, name);
+    setupControls();
+    controls.hide();
+  }
+  
+  //Funcion para que cada filtro pueda crear sus propios controles
+  protected abstract void setupControls();
+  
+  //Muestra los controles de este filtro
+  public void ShowControls()
+  {
+    controls.show();
+  }
+  
+  //Oculta los controles del filtro
+  public void HideControls()
+  {
+    controls.hide();
+  }
+  /**
   * Funcion por pixel para el procesamiento de la imagen
   *  @param x coordenada x del pixel en la imagen
   *  @param y coordenada y del pixel en la imagen
@@ -65,4 +92,5 @@ public abstract class BaseFilter
   {
     return name;
   }
+  
 }

@@ -12,16 +12,15 @@ public class UIManager
   Button saveImageButton;
   Button applyFilterButton;
   
+  ScrollableList listaFiltros;
   
-  DropdownList listaFiltros;
-  
-  public UIManager(ControlP5 cp5)
+  public UIManager(ControlP5 p5)
   {
-    this.cp5 = cp5;
+    this.cp5 = p5;
     loadImageButton = new Button(p5, "Cargar Imagen");
     saveImageButton = new Button(p5, "Guardar Imagen");
     applyFilterButton = new Button(p5, "Aplicar");
-    listaFiltros = new DropdownList(p5, "Lista de filtros");
+    listaFiltros = new ScrollableList(p5, "Lista de filtros");
     
     //Boton para cargar imagen
     loadImageButton.setLabel("Cargar Imagen");
@@ -45,18 +44,21 @@ public class UIManager
   }
   
   private void setupFilterList()
-  {
-    
+  { 
     //UI
     listaFiltros.setOpen(false);
-    listaFiltros.setPosition(690, 10);
+    listaFiltros.setPosition(width - 110, 10);
     listaFiltros.setBarHeight(30);
     listaFiltros.setWidth(100);
     listaFiltros.setItemHeight(25);
     listaFiltros.onLeave(event -> listaFiltros.close());
-    
+    listaFiltros.onChange(event -> updateUI());
   }
-  
+  /**
+  *  Agrega una lista de filtros a la lista de la UI
+  *
+  *  @param filtros lista de filtros
+  */
   public void AddFilterList(ArrayList<BaseFilter> filtros)
   {
     for(BaseFilter f : filtros)
@@ -65,13 +67,14 @@ public class UIManager
     }
   }
   
+  /**
+  *  Regresa el indice del filtro seleccionado actualmente
+  *
+  *  @return indice del filtro seleccionado
+  */
   public int GetCurrentSelectedFilter()
   {
     return (int)listaFiltros.getValue();
   }
   
-  public void AddFilter(String name)
-  {
-    listaFiltros.addItem(name, listaFiltros);
-  }
 }

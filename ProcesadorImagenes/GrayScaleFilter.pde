@@ -1,13 +1,19 @@
+/*
+*  Filtro monocromatico
+*/  
+
 public class GrayScaleFilter extends BaseFilter
 {
   public GrayScaleFilter()
   {
     name = "Escala de Grises";
   }
+  
   public GrayScaleFilter(String n)
   {
     super(n);
   }
+  
   protected color pixelProcessing(int x, int y, int l, int[] input)
   {
     float r = red(input[l]);
@@ -16,5 +22,11 @@ public class GrayScaleFilter extends BaseFilter
     
     float k = r * 0.2126 + g * 0.7152 + b * 0.0722;
     return color(k,k,k);
+  }
+  
+  protected void setupControls()
+  {
+    controls.setSize(100,300);
+    controls.setPosition(100,100);
   }
 }

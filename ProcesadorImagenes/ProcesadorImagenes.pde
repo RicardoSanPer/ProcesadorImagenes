@@ -6,7 +6,7 @@ ImageProcessor img;
 
 void setup()
 {
-  size(800,600);
+  size(1000,600);
   
   p5 = new ControlP5(this);
   
@@ -32,6 +32,7 @@ void ApplyProcessing()
 
 void setupFilters()
 {
+  
   //Inicializar filtros
   img.addFilter(new GrayScaleFilter());
   img.addFilter(new RedFilter());
@@ -40,6 +41,21 @@ void setupFilters()
   
   //Agregarlos a la ui
   ui.AddFilterList(img.GetFilterList());
+  
+  //Inicializa los controles de UI de los filtros
+  for(BaseFilter f : img.GetFilterList())
+  {
+    f.StartControls(p5);
+  }
+  
+  //Mostrar controles del filtro por defecto
+  img.GetFilterList().get(0).ShowControls();
+}
+
+//Actualiza la UI para mostrar los controles del filtro seleccionado actualmente
+void updateUI()
+{
+  img.SwitchUI(ui.GetCurrentSelectedFilter());
 }
 
 
