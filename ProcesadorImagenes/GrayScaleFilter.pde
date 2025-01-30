@@ -28,12 +28,15 @@ public class GrayScaleFilter extends BaseFilter
   {
   }
 }
+/**
+*  Filtro binarizacion/alto contraste. Cambia el valor de un pixel a negro o blanco
+*  dependiendo de un valor umbral (por defecto 128)
+*
+*/
 
 public class BinarizationFilter extends BaseFilter
 {
-  Slider slider;
-  Button plus;
-  Button minus;
+  CustomSliderController slider;
   
   public BinarizationFilter()
   {
@@ -52,7 +55,7 @@ public class BinarizationFilter extends BaseFilter
     float b = blue(input[l]);
     
     float k = r * 0.2126 + g * 0.7152 + b * 0.0722;
-    k = k > slider.getValue() ? 255 : 0;
+    k = k > slider.GetValue() ? 255 : 0;
     return color(k,k,k);
   }
   
@@ -60,56 +63,9 @@ public class BinarizationFilter extends BaseFilter
   {
     controls.setLabel("Controles de Binarizacion");
     controls.setSize(200, 400);
-    controls.setPosition(width - 230, 30);
+    controls.setPosition(width - 250, 30);
     
-    //Slider
-    slider = new Slider(p5, "Rango");
-    slider.setLabel("");
-    slider.setSize(160, 15);
-    slider.setPosition(20, 10);
-    
-    slider.setRange(0,255);
-    slider.setValue(128);
-    slider.setSliderMode(0);
-    
-    slider.setScrollSensitivity(0);
-    
-    slider.onRelease(event -> updateSlider());
-    slider.onReleaseOutside(event -> updateSlider());
-    
-    
-    slider.setGroup(controls);
-    
-    plus = new Button(p5, "Addition");
-    plus.setLabel("+");
-    plus.setSize(15,15);
-    plus.setPosition(190,10);
-    plus.setGroup(controls);
-    plus.onRelease(event -> addValue());
-    
-    minus = new Button(p5, "minus");
-    minus.setLabel("-");
-    minus.setSize(15,15);
-    minus.setPosition(0,10);
-    minus.setGroup(controls);
-    minus.onRelease(event -> minusValue());
+    slider = new CustomSliderController(controls, p5, "Binarization", 10);
   }
   
-  //Actualiza el slider para tener un valor entero
-  private void updateSlider()
-  {
-    slider.setValue((float)Math.floor(slider.getValue()));
-  }
-  
-  private void addValue()
-  {
-    slider.setValue(slider.getValue()+1);
-    updateSlider();
-  }
-  
-  private void minusValue()
-  {
-    slider.setValue(slider.getValue()-1);
-    updateSlider();
-  }
 }

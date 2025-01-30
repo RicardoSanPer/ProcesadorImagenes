@@ -24,19 +24,19 @@ public class UIManager
     
     //Boton para cargar imagen
     loadImageButton.setLabel("Cargar Imagen");
-    loadImageButton.setPosition(120,10);
+    loadImageButton.setPosition(10,10);
     loadImageButton.setSize(100, 30);
     loadImageButton.onRelease(event -> LoadImage());
     
     //Boton para guardar imagen
     saveImageButton.setLabel("Guardar Imagen");
-    saveImageButton.setPosition(230,10);
+    saveImageButton.setPosition(120,10);
     saveImageButton.setSize(100, 30);
     saveImageButton.onRelease(event -> SaveProcessed());
     
     //Boton para guardar imagen
     applyFilterButton.setLabel("Processar Filtro");
-    applyFilterButton.setPosition(340,10);
+    applyFilterButton.setPosition(width - 500,10);
     applyFilterButton.setSize(100, 30);
     applyFilterButton.onRelease(event -> ApplyProcessing());
     
@@ -47,7 +47,7 @@ public class UIManager
   { 
     //UI
     listaFiltros.setOpen(false);
-    listaFiltros.setPosition(10, 10);
+    listaFiltros.setPosition(width - 390, 10);
     listaFiltros.setBarHeight(30);
     listaFiltros.setWidth(100);
     listaFiltros.setItemHeight(25);
