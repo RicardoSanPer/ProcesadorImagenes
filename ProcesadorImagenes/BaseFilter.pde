@@ -47,13 +47,13 @@ public abstract class BaseFilter
   */
   public void StartControls(ControlP5 cp5)
   {
-    controls = new Group(cp5, name);
-    setupControls();
+    controls = cp5.addGroup(name);
+    setupControls(cp5);
     controls.hide();
   }
   
   //Funcion para que cada filtro pueda crear sus propios controles
-  protected abstract void setupControls();
+  protected abstract void setupControls(ControlP5 cp5);
   
   //Muestra los controles de este filtro
   public void ShowControls()

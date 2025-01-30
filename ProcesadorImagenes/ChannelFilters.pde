@@ -15,10 +15,8 @@ public class RedFilter extends BaseFilter
   {
     return color(red(input[l]), 0, 0);
   }
-  protected void setupControls()
+  protected void setupControls(ControlP5 cp5)
   {
-    controls.setSize(100,300);
-    controls.setPosition(100,100);
   }
 }
 
@@ -42,10 +40,8 @@ public class GreenFilter extends BaseFilter
     return color(0, green(input[l]), 0);
   }
   
-  protected void setupControls()
+  protected void setupControls(ControlP5 cp5)
   {
-    controls.setSize(100,300);
-    controls.setPosition(100,100);
   }
 }
 
@@ -69,9 +65,7 @@ public class BlueFilter extends BaseFilter
     return color(0, 0, blue(input[l]));
   }
   
-  protected void setupControls()
+  protected void setupControls(ControlP5 cp5)
   {
-    controls.setSize(100,300);
-    controls.setPosition(100,100);
   }
 }

@@ -38,6 +38,7 @@ void setupFilters()
   img.addFilter(new RedFilter());
   img.addFilter(new GreenFilter());
   img.addFilter(new BlueFilter());
+  img.addFilter(new BinarizationFilter());
   
   //Agregarlos a la ui
   ui.AddFilterList(img.GetFilterList());
