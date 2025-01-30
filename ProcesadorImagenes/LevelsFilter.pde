@@ -38,7 +38,7 @@ public class BrightnessFilter extends BaseFilter
   
   protected void setupControls(ControlP5 p5)
   {
-    controls.setLabel("Controles de Niveles");
+    controls.setLabel("Controles de Brillo");
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
@@ -90,7 +90,7 @@ public class RGBLevelsFilter extends BaseFilter
   
   protected void setupControls(ControlP5 p5)
   {
-    controls.setLabel("Controles de Brillo");
+    controls.setLabel("Controles de Niveles");
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     

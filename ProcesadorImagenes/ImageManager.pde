@@ -25,13 +25,15 @@ public class ImageProcessor
   */
   public void DrawImages()
   {
+    float desiredWidth = ((width - 300) * 0.5) - 20 ;
+    float ratio = desiredWidth / base.width;
     if(base != null)
     {
-      image(base, 10, 60, (width - base.width) * 0.5, (height - base.height) * 0.5);
+      image(base, 10, 60, desiredWidth, base.height * ratio);
     }
     if(processed != null)
     {
-      image(processed, ((width - base.width)/2) + 10, 60, (width - processed.width) * 0.5, (height - processed.height) * 0.5);
+      image(processed, desiredWidth + 20, 60, desiredWidth, base.height * ratio);
     }
   }
   /**

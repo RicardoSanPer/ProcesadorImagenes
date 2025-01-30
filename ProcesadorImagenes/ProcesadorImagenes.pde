@@ -6,7 +6,7 @@ ImageProcessor img;
 
 void setup()
 {
-  size(1000,600);
+  size(1200,720);
   
   p5 = new ControlP5(this);
   
