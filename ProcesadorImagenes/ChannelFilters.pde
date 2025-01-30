@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
 * Filtro de canal rojo
 */
@@ -68,4 +70,77 @@ public class BlueFilter extends BaseFilter
   protected void setupControls(ControlP5 cp5)
   {
   }
+}
+
+/**
+*  Filtro de cuantizacion de pixeles. Basicamente restringe la cantidad de tonos por
+*  canal. Adicionalmente puede aplicar dithering usando variaciones aleatorias en los
+*  valores de los pixeles para evitar el banding de tonos
+*/
+public class QuantizeFilter extends BaseFilter
+{
+  CustomSliderController slider;
+  CheckBox useDithering;
+  CustomSliderController ditherRandom; //Slider que controla la intensidad de la variacion
+  Random rand;
+  
+  public QuantizeFilter()
+  {
+    super("Cuantizacion");
+    rand = new Random();
+  }
+  
+  public QuantizeFilter(String n)
+  {
+    super(n);
+  }
+  
+  protected color pixelProcessing(int x, int y, int l, int[] input)
+  {
+    float r = red(input[l]);
+    float g = green(input[l]);
+    float b = blue(input[l]);
+   
+    return color(quantize(r), quantize(g), quantize(b));
+  }
+  
+  private float quantize(float c)
+  {
+     if(useDithering.getItem(0).getState())
+     {
+       c = c + ((float)rand.nextDouble() - 0.5) * ditherRandom.GetValue();
+     }
+     
+     float factor = 255 / (slider.GetValue() - 1);
+     float k = c / factor;
+     k = (k % 1 > 0.5)? (float)Math.ceil(k) : (float)Math.floor(k);
+     k = k * factor;
+     k = k > 255 ? 255 : k < 0 ? 0 : k;
+     return k;
+  }
+  
+  protected void setupControls(ControlP5 p5)
+  {
+    controls.setLabel("Controles de Quantizacion");
+    controls.setSize(200, 400);
+    controls.setPosition(width - 250, 30);
+    
+    slider = new CustomSliderController(controls, p5, "Tones", 10);
+    slider.SetRange(2, 16);
+    slider.SetValue(2);
+    
+    //Controles de dithering
+    useDithering = new CheckBox(p5, "Dithering" + name);
+    useDithering.addItem("Usar Dithering", 0);
+    useDithering.setSize(15,15);
+    useDithering.setPosition(0, 35);
+    useDithering.setGroup(controls);
+    
+    ditherRandom = new CustomSliderController(controls, p5, "DitherRandom", 60);
+    ditherRandom.SetRange(0, 255);
+    ditherRandom.SetValue(32);
+    
+    
+  }
+  
 }

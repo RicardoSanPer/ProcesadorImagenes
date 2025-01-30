@@ -42,7 +42,6 @@ void setupFilters()
   img.addFilter(new BrightnessFilter());
   img.addFilter(new RGBLevelsFilter());
   img.addFilter(new InvertFilter());
-  img.addFilter(new QuantizeFilter());
   
   //Agregarlos a la ui
   ui.AddFilterList(img.GetFilterList());
