@@ -72,10 +72,8 @@ public class BinarizationFilter extends BaseFilter
     
     slider = new CustomSliderController(controls, p5, "Binarization", "Umbral", 20);
     
-    invert = new Toggle(p5, "Invertir Binario");
-    invert.setValue(false);
-    invert.setSize(35,15);
-    invert.setPosition(0, 45);
+    invert = new Toggle(p5, "InvertirBinario" + name);
+    SetupToggle(invert, "Invertir", 45);
     invert.setGroup(controls);
     
   }

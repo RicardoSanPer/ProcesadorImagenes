@@ -48,7 +48,7 @@ public class CustomSliderController
     
     //Boton +
     plus = new Button(p5, "Addition" + name);
-    plus.setLabel("+");
+    plus.getCaptionLabel().setText("+");
     plus.setSize(15,15);
     plus.setPosition(185,posY);
     plus.setGroup(controls);
@@ -56,7 +56,7 @@ public class CustomSliderController
     
     //boton -
     minus = new Button(p5, "Minus" + name);
-    minus.setLabel("-");
+    minus.getCaptionLabel().setText("-");
     minus.setSize(15,15);
     minus.setPosition(0,posY);
     minus.setGroup(controls);
@@ -118,4 +118,18 @@ public class CustomSliderController
     slider.setValue(slider.getValue()-1);
     updateSlider();
   }
+}
+
+/*
+*  Funcion para estilizar el toggle
+*
+*/
+public void SetupToggle(Toggle toggle, String label, float posY)
+{
+  toggle.getCaptionLabel().setText(label);
+  toggle.setValue(false);
+  toggle.setSize(15,15);
+  toggle.setPosition(0, posY);
+  toggle.getCaptionLabel().getStyle().marginTop = -15;
+  toggle.getCaptionLabel().getStyle().marginLeft = 20;
 }

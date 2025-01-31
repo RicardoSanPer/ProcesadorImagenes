@@ -80,7 +80,7 @@ public class BlueFilter extends BaseFilter
 public class QuantizeFilter extends BaseFilter
 {
   CustomSliderController slider;
-  CheckBox useDithering;
+  Toggle useDithering;
   CustomSliderController ditherRandom; //Slider que controla la intensidad de la variacion
   Random rand;
   
@@ -106,7 +106,7 @@ public class QuantizeFilter extends BaseFilter
   
   private float quantize(float c)
   {
-     if(useDithering.getItem(0).getState())
+     if(useDithering.getBooleanValue())
      {
        c = c + ((float)rand.nextDouble() - 0.5) * ditherRandom.GetValue();
      }
@@ -130,10 +130,8 @@ public class QuantizeFilter extends BaseFilter
     slider.SetValue(2);
     
     //Controles de dithering
-    useDithering = new CheckBox(p5, "Dithering" + name);
-    useDithering.addItem("Usar Dithering", 0);
-    useDithering.setSize(15,15);
-    useDithering.setPosition(0, 45);
+    useDithering = new Toggle(p5, "Dithering" + name);
+    SetupToggle(useDithering, "Dithering", 45);
     useDithering.setGroup(controls);
     
     ditherRandom = new CustomSliderController(controls, p5, "DitherRandom" + name, "Intensidad", 80);

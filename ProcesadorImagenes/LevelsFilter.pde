@@ -120,7 +120,7 @@ public class InvertFilter extends BaseFilter
 {
   public InvertFilter()
   {
-    super("Invertir");
+    super("Invertir Colores");
   }
   
   public InvertFilter(String n)
