@@ -42,7 +42,7 @@ public class BrightnessFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    slider = new CustomSliderController(controls, p5, "Brightness", 10);
+    slider = new CustomSliderController(controls, p5, "Brightness"+name, "Ganancia", 20);
     slider.SetRange(-255, 255);
     slider.SetValue(0);
   }
@@ -77,13 +77,13 @@ public class RGBLevelsFilter extends BaseFilter
     float g = green(input[l]);
     float b = blue(input[l]);
     
-    r += rojo.GetValue();
+    r *= rojo.GetValue()/255;
     r = r < 0 ? 0 : r > 255? 255 : r;
     
-    g += verde.GetValue();
+    g *= verde.GetValue()/255;
     g = g < 0 ? 0 : g > 255? 255 : g;
     
-    b += azul.GetValue();
+    b *= azul.GetValue()/255;
     b = b < 0 ? 0 : b > 255? 255 : b;
     return color(r,g,b);
   }
@@ -94,19 +94,19 @@ public class RGBLevelsFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    rojo = new CustomSliderController(controls, p5, "RLevel", 10);
-    rojo.SetRange(-255, 255);
-    rojo.SetValue(0);
+    rojo = new CustomSliderController(controls, p5, "RLevel" + name, "Rojo", 20);
+    rojo.SetRange(0, 255);
+    rojo.SetValue(255);
     rojo.SetColor(color(128,0,0));
     
-    verde = new CustomSliderController(controls, p5, "GLevel", 30);
-    verde.SetRange(-255, 255);
-    verde.SetValue(0);
+    verde = new CustomSliderController(controls, p5, "GLevel" + name, "Verde", 60);
+    verde.SetRange(0, 255);
+    verde.SetValue(255);
     verde.SetColor(color(0,128,0));
     
-    azul = new CustomSliderController(controls, p5, "BLevel", 50);
-    azul.SetRange(-255, 255);
-    azul.SetValue(0);
+    azul = new CustomSliderController(controls, p5, "BLevel" + name, "Azul", 100);
+    azul.SetRange(0, 255);
+    azul.SetValue(255);
     azul.SetColor(color(0,0,218));
   }
 }

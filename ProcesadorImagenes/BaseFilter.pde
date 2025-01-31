@@ -1,3 +1,10 @@
+/*
+*  Clase base filtro de la cual heredan los filtros
+*
+*
+*
+*/
+
 public abstract class BaseFilter
 {
   protected String name;
@@ -48,6 +55,8 @@ public abstract class BaseFilter
   public void StartControls(ControlP5 cp5)
   {
     controls = cp5.addGroup(name);
+    controls.setBarHeight(20);
+    controls.getCaptionLabel().getStyle().marginTop = 5;
     setupControls(cp5);
     controls.hide();
   }

@@ -37,6 +37,7 @@ public class GrayScaleFilter extends BaseFilter
 public class BinarizationFilter extends BaseFilter
 {
   CustomSliderController slider;
+  Toggle invert;
   
   public BinarizationFilter()
   {
@@ -56,6 +57,10 @@ public class BinarizationFilter extends BaseFilter
     
     float k = r * 0.2126 + g * 0.7152 + b * 0.0722;
     k = k > slider.GetValue() ? 255 : 0;
+    if(invert.getBooleanValue())
+    {
+      k = 255 - k;
+    }
     return color(k,k,k);
   }
   
@@ -65,7 +70,14 @@ public class BinarizationFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    slider = new CustomSliderController(controls, p5, "Binarization", 10);
+    slider = new CustomSliderController(controls, p5, "Binarization", "Umbral", 20);
+    
+    invert = new Toggle(p5, "Invertir Binario");
+    invert.setValue(false);
+    invert.setSize(35,15);
+    invert.setPosition(0, 45);
+    invert.setGroup(controls);
+    
   }
   
 }

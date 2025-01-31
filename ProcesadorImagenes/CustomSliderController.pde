@@ -18,11 +18,10 @@ public class CustomSliderController
   *  @param name nombre del control, para evitar nombres repetidos
   *  @param y traslacion en y respecto al origen del grupo
   */
-  public CustomSliderController(Group controls, ControlP5 p5, String name, float posY)
+  public CustomSliderController(Group controls, ControlP5 p5, String name, String text, float posY)
   {
     //Slider
     slider = new Slider(p5, "Rango" + name);
-    slider.setLabel("");
     slider.setSize(160, 15);
     slider.setPosition(20, posY);
     
@@ -35,13 +34,23 @@ public class CustomSliderController
     slider.onRelease(event -> updateSlider());
     slider.onReleaseOutside(event -> updateSlider());
     
+    
     slider.setGroup(controls);
+    
+    slider.getCaptionLabel().setText(text);
+    //slider.getCaptionLabel().align(ControlP5.LEFT, ControlP5.TOP_OUTSIDE);
+    slider.getCaptionLabel().getStyle().marginTop = -15;
+    slider.getCaptionLabel().getStyle().marginLeft = -180;
+    //slider.getCaptionLabel().setPadding(-150, 0);
+    
+    
+    //slider.moveTo(controls);
     
     //Boton +
     plus = new Button(p5, "Addition" + name);
     plus.setLabel("+");
     plus.setSize(15,15);
-    plus.setPosition(190,posY);
+    plus.setPosition(185,posY);
     plus.setGroup(controls);
     plus.onRelease(event -> addValue());
     

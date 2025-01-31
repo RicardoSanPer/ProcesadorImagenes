@@ -125,7 +125,7 @@ public class QuantizeFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    slider = new CustomSliderController(controls, p5, "Tones", 10);
+    slider = new CustomSliderController(controls, p5, "Tones" + name, "Tonos", 20);
     slider.SetRange(2, 16);
     slider.SetValue(2);
     
@@ -133,10 +133,10 @@ public class QuantizeFilter extends BaseFilter
     useDithering = new CheckBox(p5, "Dithering" + name);
     useDithering.addItem("Usar Dithering", 0);
     useDithering.setSize(15,15);
-    useDithering.setPosition(0, 35);
+    useDithering.setPosition(0, 45);
     useDithering.setGroup(controls);
     
-    ditherRandom = new CustomSliderController(controls, p5, "DitherRandom", 60);
+    ditherRandom = new CustomSliderController(controls, p5, "DitherRandom" + name, "Intensidad", 80);
     ditherRandom.SetRange(0, 255);
     ditherRandom.SetValue(32);
     

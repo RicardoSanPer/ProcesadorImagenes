@@ -6,9 +6,10 @@ ImageProcessor img;
 
 void setup()
 {
-  size(1200,720);
+  size(1600,720);
   
   p5 = new ControlP5(this);
+  p5.setFont(createFont("Arial", 10));
   
   img = new ImageProcessor();
   ui = new UIManager(p5);

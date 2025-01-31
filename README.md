@@ -37,3 +37,10 @@ por defecto si no se especifica una extension de archivo de imagen al elegir el 
 Los filtros se eligen de una lista. Al elegir un filtro, este puede adicionalmente mostrar parametros para modificar el filtro.
 
 Para aplicar el filtro, hacer click en "Procesar Filtro".
+
+## Implementacion
+
+Se implemento una clase ImageProcessor que se encarga de procesar las imagenes y una clase UIManager que se encarga de la UI del programa.
+
+Se implementó una clase base BaseFilter de la cual heredan todos los filtros que se implementan. Cada filtro implementa su procesamiento
+de los pixeles.
