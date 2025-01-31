@@ -92,7 +92,7 @@ public abstract class BaseFilter
   *  @param y coordenada y del pixel en la imagen
   *  @return indice correspondiente del pixel en el arreglo
   */
-  private int pixelLocation(int x, int y)
+  protected int pixelLocation(int x, int y)
   {
     return x + y * imageWidth;
   }

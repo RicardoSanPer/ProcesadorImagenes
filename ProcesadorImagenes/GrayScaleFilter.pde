@@ -4,6 +4,7 @@
 
 public class GrayScaleFilter extends BaseFilter
 {
+  Toggle usarPesos;
   public GrayScaleFilter()
   {
     super("Escala de Grises");
@@ -20,12 +21,30 @@ public class GrayScaleFilter extends BaseFilter
     float g = green(input[l]);
     float b = blue(input[l]);
     
-    float k = r * 0.2126 + g * 0.7152 + b * 0.0722;
+    float k = 128;
+    
+    //Usar pesos ponderados
+    if(usarPesos.getBooleanValue())
+    {
+      k = r * 0.2126 + g * 0.7152 + b * 0.0722;
+    }
+    //Usar promedio de los canales
+    else
+    {
+      k = (r + g + b) / 3;
+    }
     return color(k,k,k);
   }
   
   protected void setupControls(ControlP5 cp5)
   {
+    controls.setLabel("Controles de Escala de Grises");
+    controls.setSize(200, 400);
+    controls.setPosition(width - 250, 30);
+    
+    usarPesos = new Toggle(p5, "UsarPesos" + name);
+    SetupToggle(usarPesos, "Usar Pesos Ponderados", 15);
+    usarPesos.setGroup(controls);
   }
 }
 /**
@@ -70,7 +89,7 @@ public class BinarizationFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    slider = new CustomSliderController(controls, p5, "Binarization", "Umbral", 20);
+    slider = new CustomSliderController(controls, p5, "Binarization"+name, "Umbral", 20);
     
     invert = new Toggle(p5, "InvertirBinario" + name);
     SetupToggle(invert, "Invertir", 45);
