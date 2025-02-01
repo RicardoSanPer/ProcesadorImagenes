@@ -35,7 +35,7 @@ public class UIManager
     saveImageButton.onRelease(event -> SaveProcessed());
     
     //Boton para guardar imagen
-    applyFilterButton.setLabel("Processar Filtro");
+    applyFilterButton.setLabel("Procesar Filtro");
     applyFilterButton.setPosition(width - 570,10);
     applyFilterButton.setSize(120, 30);
     applyFilterButton.onRelease(event -> ApplyProcessing());
@@ -51,6 +51,7 @@ public class UIManager
     listaFiltros.setBarHeight(30);
     listaFiltros.setWidth(120);
     listaFiltros.setItemHeight(25);
+    listaFiltros.setHeight(300);
     listaFiltros.onLeave(event -> listaFiltros.close());
     listaFiltros.onChange(event -> updateUI());
   }
