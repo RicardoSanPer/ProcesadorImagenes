@@ -31,6 +31,7 @@ void ApplyProcessing()
   img.Apply(ui.GetCurrentSelectedFilter());
 }
 
+//Inicializa la lista de filtros
 void setupFilters()
 {
   

@@ -25,15 +25,31 @@ public class ImageProcessor
   */
   public void DrawImages()
   {
+    //Calcular el cociente de aspecto de la imagen y el espacio de
+    //visualizacion para cambiar el tamaño de despliegue de la imagen
+    //para que se vea completa
+    
+    //Se ajusta primero la anchura de la imagen
     float desiredWidth = ((width - 300) * 0.5) - 20 ;
-    float ratio = desiredWidth / base.width;
+    float xratio = desiredWidth / base.width;
+    
+    //Se ajusta la altura
+    float desiredHeight = height - 100;
+    float yratio  = 1;
+    if(base.height * xratio > desiredHeight)
+    {
+      yratio = desiredHeight / (base.height * xratio);
+    }
+    
+    float ratio = xratio * yratio;
+    
     if(base != null)
     {
-      image(base, 10, 60, desiredWidth, base.height * ratio);
+      image(base, 10, 60, base.width * ratio, base.height * ratio);
     }
     if(processed != null)
     {
-      image(processed, desiredWidth + 20, 60, desiredWidth, base.height * ratio);
+      image(processed, (base.width * ratio) + 20, 60, base.width * ratio, base.height * ratio);
     }
   }
   /**
