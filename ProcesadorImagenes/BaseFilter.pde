@@ -62,7 +62,7 @@ public abstract class BaseFilter
   }
   
   //Funcion para que cada filtro pueda crear sus propios controles
-  protected abstract void setupControls(ControlP5 cp5);
+  protected void setupControls(ControlP5 cp5) {};
   
   //Muestra los controles de este filtro
   public void ShowControls()

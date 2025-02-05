@@ -1,4 +1,4 @@
-import controlP5.*;
+  import controlP5.*;
 
 ControlP5 p5;
 UIManager ui;
@@ -6,7 +6,7 @@ ImageProcessor img;
 
 void setup()
 {
-  size(1600,720);
+  size(1200,720);
   
   p5 = new ControlP5(this);
   p5.setFont(createFont("Arial", 10));
