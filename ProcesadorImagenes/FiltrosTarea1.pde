@@ -305,6 +305,7 @@ public class RGBLevelsFilter extends BaseFilter
     float g = green(input[l]);
     float b = blue(input[l]);
     
+    //Multiplicar canales por la intensidad deseada (normalizado a rango 0-1)
     r *= rojo.GetValue()/255;
     r = r < 0 ? 0 : r > 255? 255 : r;
     
