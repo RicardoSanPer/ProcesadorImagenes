@@ -1,4 +1,13 @@
 import java.util.Random;
+/*
+*
+*        FILTROS TAREA 1
+*
+*
+*
+*/
+
+
 
 /**
 * Filtro de canal rojo
@@ -16,9 +25,6 @@ public class RedFilter extends BaseFilter
   protected color pixelProcessing(int x, int y, int l, int[] input)
   {
     return color(red(input[l]), 0, 0);
-  }
-  protected void setupControls(ControlP5 cp5)
-  {
   }
 }
 
@@ -41,10 +47,6 @@ public class GreenFilter extends BaseFilter
   {
     return color(0, green(input[l]), 0);
   }
-  
-  protected void setupControls(ControlP5 cp5)
-  {
-  }
 }
 
 /**
@@ -65,10 +67,6 @@ public class BlueFilter extends BaseFilter
   protected color pixelProcessing(int x, int y, int l, int[] input)
   {
     return color(0, 0, blue(input[l]));
-  }
-  
-  protected void setupControls(ControlP5 cp5)
-  {
   }
 }
 
@@ -130,7 +128,7 @@ public class MosaicFilter extends BaseFilter
     return color(r / count, g / count, b / count);
   }
   /**
-  * Implementacion mas eficiente. Divide la imagen en mosaicos de tamaño dado por el kernel y por cada mosaico
+  * Implementacion mas eficiente. Divide la imagen en bloques de tamaño dado por el kernel y por cada bloque
   * itera sobre cada pixel dentro del mismo para tomar una muestra y calcular el color final, y
   * luego itera de nuevo sobre cada uno para asignar este valor calculado, con lo que
   * se itera por cada pixel solo dos veces.
@@ -343,6 +341,7 @@ public class RGBLevelsFilter extends BaseFilter
 
 /*
 *  Filtro monocromatico (blacno/negro)
+* Incluye control para usar pesos ponderados
 */  
 
 public class GrayScaleFilter extends BaseFilter
@@ -393,7 +392,7 @@ public class GrayScaleFilter extends BaseFilter
 
 /**
 *  Filtro binarizacion/alto contraste. Cambia el valor de un pixel a negro o blanco
-*  dependiendo de un valor umbral (por defecto 128)
+*  dependiendo de un valor umbral (por defecto 128). Incluye control para invertir el resultado
 *
 */
 
@@ -468,8 +467,6 @@ public class InvertFilter extends BaseFilter
     
     return color(255 - r, 255 - g, 255 - b);
   }
-  
-  protected void setupControls(ControlP5 p5){}
 }
 
 
