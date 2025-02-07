@@ -165,3 +165,126 @@ public class EfficientBlurFilter extends BaseConvolucion
     output.updatePixels();
   }
 }
+
+
+public class MotionBlurFilter extends BaseConvolucion
+{
+  Knob directionKnob;
+  
+  float slopex;
+  float slopey;
+  float distance;
+  
+  public MotionBlurFilter()
+  {
+    super("Movimiento");
+  }
+  
+   protected color pixelProcessing(int x, int y, int location, int[] pix)
+   {
+     float px = x;
+     float py = y;
+     
+     float r = 0;
+     float g = 0;
+     float b = 0;
+     
+     float f = 0;
+     while(px < imageWidth && px > 0 && py < imageHeight && py > 0)
+     {
+       float dx = px - x;
+       float dy = py - y;
+       if(dx * dx + dy * dy > distance * distance)
+       {
+         break;
+       }
+       location = pixelLocation((int)px,(int)py);
+       r += red(pix[location]);
+       g += green(pix[location]);
+       b += blue(pix[location]);
+       
+       px += slopex;
+       py += slopey;
+       
+       f++;
+     }
+     return color(r/f, g/f, b/f);
+   }
+  
+  protected void updateKernel()
+  {
+    distance = sizek.GetValue() + 1;
+    int size = (int) (sizek.GetValue() * 2 + 1);
+    kernel = new float[size][size];
+    float angle = directionKnob.getValue() / 360;
+    angle *= PI * 2;
+    
+    slopex = cos(angle);
+    slopey = sin(angle);
+    
+    //float posx = size / 2;
+    //float posy = size / 2;
+    
+    factor = 1;
+    
+    /*
+    while(posx < size && posy < size && posx > 0 && posy > 0)
+    {
+      float dx = posx - (size / 2);
+      float dy = posy - (size / 2);
+      
+      if(dx * dx + dy * dy >= distance * distance)
+      {
+        break;
+      }
+      
+      kernel[(int)posy][(int)posx] = 1;
+      posy += slopey;
+      posx += slopex;
+    }
+    
+    for(int i = 0; i < kernel.length; i++)
+    {
+      for(int j = 0; j < kernel[0].length; j++)
+      {
+        print((int)kernel[i][j] + ",");
+      }
+      println();
+    }
+    
+    for(int i = 0; i < kernel.length; i++)
+    {
+      for(int j = 0; j < kernel[0].length; j++)
+      {
+        factor += kernel[i][j];
+      }
+    }
+    */
+    
+    //println(factor);
+  }
+  
+  
+  protected void setupControls(ControlP5 p5)
+  {
+    controls.setLabel("Controles de Desenfoque de Movimiento");
+    controls.setSize(200, 400);
+    controls.setPosition(width - 250, 30);
+    
+    sizek = new CustomNumberController(controls, p5, "KernelX" + name, "Distancia", 20);
+    
+    sizek.SetValue(5);
+    
+    directionKnob = new Knob(p5, "MotionBlurDirection");
+    directionKnob.setPosition(0, 60);
+    directionKnob.setAngleRange(2 * PI);
+    directionKnob.setStartAngle(0);
+    directionKnob.setViewStyle(Knob.LINE);
+    directionKnob.setRange(0,360);
+    directionKnob.getCaptionLabel().setText("Direccion");
+    directionKnob.setShowAngleRange(false);
+    directionKnob.getValueLabel().hide();
+    directionKnob.setGroup(controls);
+    
+  }
+}
