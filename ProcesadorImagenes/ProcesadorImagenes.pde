@@ -48,6 +48,7 @@ void setupFilters()
   //img.addFilter(new InvertFilter());
   //img.addFilter(new QuantizeFilter());
   img.addFilter(new BaseConvolucion());
+  img.addFilter(new EfficientBlurFilter());
   
   //Agregarlos a la ui
   ui.AddFilterList(img.GetFilterList());

@@ -108,19 +108,21 @@ public abstract class BaseFilter
 /****
 *
 *  Clase base para filtros de convoluciones
-*  
+*  Filtro base es filtro de media (blur)
 *
 */
 
 public class BaseConvolucion extends BaseFilter
 {
   //Kernel con los valores de pesos
-  float[][] kernel;
+  float[][] kernel = {{1, 1, 1},
+                      {1, 1, 1},
+                      {1, 1, 1}};
     
   float factor = 9;
+  float bias = 0;
   
-  CustomNumberController kernelX;
-  CustomNumberController kernelY;
+  CustomNumberController sizek;
   
   public BaseConvolucion() 
   {
@@ -160,7 +162,7 @@ public class BaseConvolucion extends BaseFilter
         b += blue(pix[ld]) * kernel[i][j];
       }
     }
-    return color(r/factor,g/factor,b/factor);
+    return color(r/factor  + bias,g/factor + bias,b/factor + bias);
   }
   
    public void ProcessImage(PImage input, PImage output)
@@ -171,24 +173,21 @@ public class BaseConvolucion extends BaseFilter
   
   protected void setupControls(ControlP5 p5)
   {
-    controls.setLabel("Controles de Mosaico");
+    controls.setLabel("Controles de Convolucion");
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    kernelX = new CustomNumberController(controls, p5, "KernelX" + name, "Tamaño X", 20);
-    kernelY = new CustomNumberController(controls, p5, "KernelY" + name, "Tamaño Y", 60);
+    sizek = new CustomNumberController(controls, p5, "KernelX" + name, "Tamaño", 20);
     
-    kernelX.SetValue(5);
-    kernelY.SetValue(5);
+    sizek.SetValue(5);
   }
   
   //Actualiza los valores del kernel antes de aplicar el filtro
   //Escencialmente es la función que crea los valores del kernel
   protected void updateKernel()
   {
-    int size = (int)kernelX.GetValue();
-    int sizey = (int)kernelY.GetValue();
-    kernel = new float[size][sizey];
+    int size = (int)sizek.GetValue() * 2 + 1;
+    kernel = new float[size][size];
     
     for(int i = 0; i < kernel.length; i++)
     {
@@ -197,6 +196,6 @@ public class BaseConvolucion extends BaseFilter
         kernel[i][j] = 1;
       }
     }
-    factor = size * sizey;
+    factor = size * size;
   }
 }
