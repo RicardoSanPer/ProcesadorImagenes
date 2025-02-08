@@ -191,8 +191,6 @@ public class MotionBlurFilter extends BaseConvolucion
   */
    protected color pixelProcessing(int x, int y, int location, int[] pix)
    {
-     
-     
      float r = 0;
      float g = 0;
      float b = 0;
@@ -252,8 +250,7 @@ public class MotionBlurFilter extends BaseConvolucion
     slopex = cos(angle);
     slopey = sin(angle);
     
-    //float posx = size / 2;
-    //float posy = size / 2;
+    
     
     factor = 0;
     
@@ -263,6 +260,8 @@ public class MotionBlurFilter extends BaseConvolucion
     /*
     for(in i = 9; i < 2; i++)
     {
+      //float posx = size / 2;
+      //float posy = size / 2;
       float d = (i - 0.5) * 2; 
       while(posx < size && posy < size && posx > 0 && posy > 0)
       {
@@ -317,7 +316,7 @@ public class MotionBlurFilter extends BaseConvolucion
     sizek.SetValue(5);
     
     directionKnob = new Knob(p5, "MotionBlurDirection");
-    directionKnob.setPosition(0, 60);
+    directionKnob.setPosition(5, 50);
     directionKnob.setAngleRange(2 * PI);
     directionKnob.setStartAngle(0);
     directionKnob.setViewStyle(Knob.LINE);
@@ -328,4 +327,26 @@ public class MotionBlurFilter extends BaseConvolucion
     directionKnob.setGroup(controls);
     
   }
+}
+
+/**
+*
+*  Filtro detección de bordes
+*
+*
+*/
+
+public class EdgeDetectionFilter extends BaseConvolucion
+{
+  public EdgeDetectionFilter()
+  {
+    super("Detectar Bordes");
+    kernel = new float[][]{{-1,-1,-1},
+                           {-1,8,-1},
+                           {-1,-1,-1}};
+                           
+   factor = 1;
+  }
+  protected void updateKernel(){}
+  protected void setupControls(ControlP5 p5){}
 }

@@ -51,6 +51,7 @@ void setupFilters()
   //img.addFilter(new BaseConvolucion()); //Filtro base de convolución (media ineficiente)
   img.addFilter(new EfficientBlurFilter());
   img.addFilter(new MotionBlurFilter());
+  img.addFilter(new EdgeDetectionFilter());
   
   //Agregarlos a la ui
   ui.AddFilterList(img.GetFilterList());
