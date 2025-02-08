@@ -180,78 +180,107 @@ public class MotionBlurFilter extends BaseConvolucion
     super("Movimiento");
   }
   
+  /*
+  *  En vez de aplicar el kerner, un "apuntador" se mueve sobre la imagen, tomando en cuenta la 
+  *  direccion de movimiento, y suma los valores de color del pixel más cercano sobre el que cae tras cada paso,
+  *  hasta que llega a la distancia del filtro o se sale de la imagen.
+  *
+  *  Implementación más eficiente, pues en vez de iterar sobre un kernel de tamaño nxn, solo se itera sobre
+  *  2n pixeles (mas o menos por errores de punto flotante) por cada pixel
+  *
+  */
    protected color pixelProcessing(int x, int y, int location, int[] pix)
    {
-     float px = x;
-     float py = y;
+     
      
      float r = 0;
      float g = 0;
      float b = 0;
      
      float f = 0;
-     while(px < imageWidth && px > 0 && py < imageHeight && py > 0)
+     
+     //Tomar muestra de los pixeles en ambos sentidos de la dirección
+     for(int i = 0; i < 2; i++)
      {
-       float dx = px - x;
-       float dy = py - y;
-       if(dx * dx + dy * dy > distance * distance)
+       //Posicion del apuntador
+       float px = x+0.5;
+       float py = y+0.5;
+       //Invierte la direccion
+       float stepDirection = (i - 0.5) * 2;
+       
+       while(px < imageWidth && px > 0 && py < imageHeight && py > 0)
        {
-         break;
+         //Distancia del apuntador al pixel origen
+         float dx = px - x;
+         float dy = py - y;
+         //Terminar si se rebasa la distancia
+         if(dx * dx + dy * dy > distance * distance)
+         {
+           break;
+         }
+         
+         //Tomar valores del pixel más cercano
+         location = pixelLocation((int)px,(int)py);
+         r += red(pix[location]);
+         g += green(pix[location]);
+         b += blue(pix[location]);
+         
+         //Mover el apuntador
+         px += slopex * stepDirection;
+         py += slopey * stepDirection;
+         
+         //Aumentar el factor por cada muestra exitosa
+         f++;
        }
-       location = pixelLocation((int)px,(int)py);
-       r += red(pix[location]);
-       g += green(pix[location]);
-       b += blue(pix[location]);
-       
-       px += slopex;
-       py += slopey;
-       
-       f++;
      }
      return color(r/f, g/f, b/f);
    }
   
   protected void updateKernel()
   {
-    distance = sizek.GetValue() + 1;
+    
+    distance = sizek.GetValue();
+    
     int size = (int) (sizek.GetValue() * 2 + 1);
     kernel = new float[size][size];
+    
+    //Angulo de movimiento
     float angle = directionKnob.getValue() / 360;
     angle *= PI * 2;
     
+    //Indican cuanto mover el apuntador en cada paso
     slopex = cos(angle);
     slopey = sin(angle);
     
     //float posx = size / 2;
     //float posy = size / 2;
     
-    factor = 1;
+    factor = 0;
     
+    //Contruye un kernel para el blur.
+    //Descomentar esto y comentar la funcion prixelProcessing para
+    //Utilizar el filtro con matriz convolucion
     /*
-    while(posx < size && posy < size && posx > 0 && posy > 0)
+    for(in i = 9; i < 2; i++)
     {
-      float dx = posx - (size / 2);
-      float dy = posy - (size / 2);
-      
-      if(dx * dx + dy * dy >= distance * distance)
+      float d = (i - 0.5) * 2; 
+      while(posx < size && posy < size && posx > 0 && posy > 0)
       {
-        break;
+        float dx = posx - (size / 2);
+        float dy = posy - (size / 2);
+        
+        if(dx * dx + dy * dy >= distance * distance)
+        {
+          break;
+        }
+        
+        kernel[(int)posy][(int)posx] = 1;
+        posy += slopey * d;
+        posx += slopex * d;
       }
-      
-      kernel[(int)posy][(int)posx] = 1;
-      posy += slopey;
-      posx += slopex;
     }
     
-    for(int i = 0; i < kernel.length; i++)
-    {
-      for(int j = 0; j < kernel[0].length; j++)
-      {
-        print((int)kernel[i][j] + ",");
-      }
-      println();
-    }
-    
+    //Calcular factor
     for(int i = 0; i < kernel.length; i++)
     {
       for(int j = 0; j < kernel[0].length; j++)
@@ -261,13 +290,25 @@ public class MotionBlurFilter extends BaseConvolucion
     }
     */
     
+    
+    /*
+    //Ver el kernel
+    for(int i = 0; i < kernel.length; i++)
+    {
+      for(int j = 0; j < kernel[0].length; j++)
+      {
+        print((int)kernel[i][j] + ",");
+      }
+      println();
+    }*/
+    
     //println(factor);
   }
   
   
   protected void setupControls(ControlP5 p5)
   {
-    controls.setLabel("Controles de Desenfoque de Movimiento");
+    controls.setLabel("Controles de Movimiento");
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     

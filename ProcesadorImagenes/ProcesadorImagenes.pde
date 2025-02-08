@@ -47,7 +47,8 @@ void setupFilters()
   img.addFilter(new RGBLevelsFilter());
   //img.addFilter(new InvertFilter());
   //img.addFilter(new QuantizeFilter());
-  img.addFilter(new BaseConvolucion());
+  
+  //img.addFilter(new BaseConvolucion()); //Filtro base de convolución (media ineficiente)
   img.addFilter(new EfficientBlurFilter());
   img.addFilter(new MotionBlurFilter());
   
