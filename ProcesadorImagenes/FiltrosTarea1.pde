@@ -484,6 +484,9 @@ public class QuantizeFilter extends BaseFilter
   CustomSliderController ditherRandom; //Slider que controla la intensidad de la variacion
   Random rand;
   
+  //Determina si aplicar valores aleatorios por canal o a los tres por igual
+  Boolean singleChannelRandom = false;
+  
   public QuantizeFilter()
   {
     super("Cuantizacion");
@@ -493,6 +496,7 @@ public class QuantizeFilter extends BaseFilter
   public QuantizeFilter(String n)
   {
     super(n);
+    rand = new Random();
   }
   
   protected color pixelProcessing(int x, int y, int l, int[] input)
@@ -500,6 +504,16 @@ public class QuantizeFilter extends BaseFilter
     float r = red(input[l]);
     float g = green(input[l]);
     float b = blue(input[l]);
+    
+    //Si se aplica el randomizador a los tres canales (como cuando la imagen esta a blanco y negro)
+    //Actualmente usado por el filtro de sopa de letras
+    if(useDithering.getBooleanValue() && singleChannelRandom)
+    {
+      float c = ((float)rand.nextDouble() - 0.5) * 2 * ditherRandom.GetValue();
+      r += c;
+      g += c;
+      b += c;
+    }
    
     return color(quantize(r), quantize(g), quantize(b));
   }
@@ -511,7 +525,7 @@ public class QuantizeFilter extends BaseFilter
   private float quantize(float c)
   {
     //Si se usa dithering varia aleatoriamente el valor de entrada en base a la cantidad de aleatoreidad
-     if(useDithering.getBooleanValue())
+     if(!singleChannelRandom && useDithering.getBooleanValue())
      {
        c = c + ((float)rand.nextDouble() - 0.5) * 2 * ditherRandom.GetValue();
      }
@@ -549,4 +563,10 @@ public class QuantizeFilter extends BaseFilter
     
   }
   
+  //Cambiar el tipo de aleatoreidad, si usar un solo valor para los
+  //tres canales (brillo) o para cada uno individual
+  public void SetSingleChannelRandom(boolean v)
+  {
+    singleChannelRandom = v;
+  }
 }

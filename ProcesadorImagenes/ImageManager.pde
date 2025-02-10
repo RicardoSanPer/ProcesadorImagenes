@@ -58,6 +58,7 @@ public class ImageProcessor
   */
   public void Apply(int seleccion)
   {
+    resetProcessed();
     if(filtros.size() < 0)
     {
       return;

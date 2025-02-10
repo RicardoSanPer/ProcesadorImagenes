@@ -70,6 +70,12 @@ public abstract class BaseFilter
     controls.show();
   }
   
+  //Funcion para obtener el grupo
+  public Group GetGroup()
+  {
+    return controls;
+  }
+  
   //Oculta los controles del filtro
   public void HideControls()
   {

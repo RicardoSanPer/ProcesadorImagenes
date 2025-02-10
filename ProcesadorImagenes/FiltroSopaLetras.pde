@@ -4,11 +4,27 @@ public class SopaLetrasFilter extends BaseFilter
   //Tamaño de letra. 1 = 1 letra por pixel
   CustomNumberController kernelSize;
   
+  //Lista de texto
+  ScrollableList modoTexto;
+  
+  //Toggles
+  Toggle useGSF;
+  Toggle useQ;
+  
+  Textfield frase;
+  String luminosidad = "MNH#QAO0Y2$%+._";
+  
   String outputHTML;
+  
+  //Filtros
+  GrayScaleFilter filtrobn;
+  QuantizeFilter filtroq;
   
   public SopaLetrasFilter()
   {
     super("Sopa de Letras");
+    filtrobn = new GrayScaleFilter("FiltroSopaBN");
+    filtroq = new QuantizeFilter("FiltroSopaQ");
   }
   
   public SopaLetrasFilter(String n)
@@ -26,7 +42,29 @@ public class SopaLetrasFilter extends BaseFilter
   {
     //Cambiar el tamaño de la imagen de salida (previsualizacion) por cuestiones de rendimiento
     //El tamaño se calcula en base al tamaño del texto relativo a la imagen
-    resizeImage(input, output); 
+    resizeImage(input, output);
+    
+    //Usar escala de grises
+    if(useGSF.getBooleanValue())
+    {
+      filtrobn.ProcessImage(output,output);
+    }
+    
+    //cuantizar
+    if(useQ.getBooleanValue())
+    {
+      filtroq.SetSingleChannelRandom(useGSF.getBooleanValue());
+      filtroq.ProcessImage(output, output);
+    }
+    
+    String sample = "M";
+    if(frase.getText().length() > 0)
+    {
+      sample = frase.getText();
+      sample = sample.toUpperCase();
+    }
+    int sampleLength = sample.length();
+    int counter = 0;
     
     input.loadPixels();
     output.loadPixels();
@@ -46,7 +84,28 @@ public class SopaLetrasFilter extends BaseFilter
         //en vez de en pixelProcessing
         if(location < output.pixels.length)
         {
-          line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">@</span>";
+          char c = 'M';
+          if(modoTexto.getValue() == 0)
+          {
+            c = sample.charAt(counter);
+          }
+          else if (modoTexto.getValue() == 1)
+          {
+            float r = red(output.pixels[location]);
+            float g = green(output.pixels[location]);
+            float b = blue(output.pixels[location]);
+            
+            float k = (r + g + b) / 3;
+            
+            float factor = 255 / (luminosidad.length()-1);
+            float i = k / factor;
+            i = (i % 1 > 0.5)? (float)Math.ceil(i) : (float)Math.floor(i);
+            
+            c = luminosidad.charAt((int)i);
+          }
+          line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";
+          counter ++;
+          counter = counter % sampleLength;
         }
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
@@ -66,12 +125,59 @@ public class SopaLetrasFilter extends BaseFilter
     kernelSize = new CustomNumberController(controls, p5, "KernelSoupSize" + name, "Tamaño Letra", 20);
     kernelSize.SetValue(5);
     
+    //Boton guardado texto
     save = new Button(p5, "GuardarSopa");
     save.getCaptionLabel().setText("Guardar HTML");
     save.setSize(100, 20);
-    save.setPosition(0,40);
+    save.setPosition(0,440);
     save.setGroup(controls);
     save.onRelease(event -> guardarHTML());
+    
+    //Frase (o letra) a repetir
+    frase = new Textfield(p5, "SoupText");
+    frase.setCaptionLabel("Frase");
+    frase.getCaptionLabel().hide();
+    frase.setPosition(0, 100);
+    frase.setGroup(controls);
+    frase.setText("FRASE O LETRA");
+    
+    //Lista modos
+    modoTexto = new ScrollableList(p5, "SoupMode");
+    modoTexto.getCaptionLabel().setText("Modo de Texto");
+    modoTexto.addItem("Texto", modoTexto);
+    modoTexto.addItem("Luminosidad", modoTexto);
+    modoTexto.setGroup(controls);
+    modoTexto.setPosition(0, 50);
+    modoTexto.setBarHeight(30);
+    modoTexto.setItemHeight(25);
+    modoTexto.setOpen(false);
+    modoTexto.setValue(0);
+    
+    
+    
+    //Toggles
+    //Usar escala de grises
+    useGSF = new Toggle(p5, "SoupGS");
+    SetupToggle(useGSF, "Grises", 50);
+    useGSF.setPosition(120,50);
+    useGSF.setGroup(controls);
+    //Usar cuantizacion
+    useQ = new Toggle(p5, "SoupQ");
+    SetupToggle(useQ, "Cuantizacion", 70);
+    useQ.setPosition(120, 70);
+    useQ.setGroup(controls);
+    
+    //Controles blanco y negro
+    filtrobn.StartControls(p5);
+    filtrobn.GetGroup().setGroup(controls);
+    filtrobn.GetGroup().setPosition(0,220);
+    filtrobn.GetGroup().show();
+    
+    //Controles cuantizacion
+    filtroq.StartControls(p5);
+    filtroq.GetGroup().setGroup(controls);
+    filtroq.GetGroup().setPosition(0, 280);
+    filtroq.GetGroup().show();
     
   }
   
