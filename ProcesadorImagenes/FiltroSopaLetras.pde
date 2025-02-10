@@ -38,7 +38,7 @@ public class SopaLetrasFilter extends BaseFilter
         //Por alguna razon es mas rápido hacer la construccion del texto aqui
         //en vez de en pixelProcessing
         
-        line += "<span style=\"color:#" + hex(input.pixels[location], 6)+"\">M</span>";
+        line += "<span style=\"color:#" + hex(input.pixels[location], 6)+"\">@</span>";
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
       outputHTML += line + "<br>";
