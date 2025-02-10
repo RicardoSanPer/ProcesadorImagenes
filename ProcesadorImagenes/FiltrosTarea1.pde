@@ -111,10 +111,10 @@ public class MosaicFilter extends BaseFilter
     {
       for(int j = starty; j < starty + kernelY.GetValue(); j++)
       {
-        int location = pixelLocation(i, j);
+        int location = pixelLocation(i, j, imageWidth);
         if(location < input.length)
         {
-          int col = input[pixelLocation(i, j)];
+          int col = input[pixelLocation(i, j, imageWidth)];
           
           r += red(col);
           g += green(col);
@@ -140,12 +140,6 @@ public class MosaicFilter extends BaseFilter
   */
   public void ProcessImage(PImage input, PImage output)
   {
-    input.loadPixels();
-    output.loadPixels();
-    
-    imageWidth = input.width;
-    imageHeight = input.height;
-    
     //Tamaño del kernel en pixeles
     float sizex = kernelX.GetValue();
     float sizey = kernelY.GetValue();
@@ -153,6 +147,12 @@ public class MosaicFilter extends BaseFilter
     //Numero de segmentos/mosaicos en los que se divide la imagen
     int nsegments = (int)(input.width / sizex);
     int msegments = (int)(input.height / sizey);
+    
+    input.loadPixels();
+    output.loadPixels();
+    
+    imageWidth = input.width;
+    imageHeight = input.height;
     
     //Iterar por mosaicos de arriba a abajo. Contar uno mas en caso de mosaicos truncados
     for(int j = 0; j <= msegments; j++)
@@ -172,9 +172,9 @@ public class MosaicFilter extends BaseFilter
           {
             int posy = (int) (y + (j * sizey));
             int posx = (int) (x + (i * sizex));
-            int loc = pixelLocation(posx, posy);
+            int loc = pixelLocation(posx, posy, input.width);
             
-            if(loc < output.pixels.length)
+            if(loc < input.pixels.length)
             {
               r += red(input.pixels[loc]);
               g += green(input.pixels[loc]);
@@ -196,7 +196,7 @@ public class MosaicFilter extends BaseFilter
           {
             int posy = (int) (y + (j * sizey));
             int posx = (int) (x + (i * sizex));
-            int loc = pixelLocation(posx, posy);
+            int loc = pixelLocation(posx, posy, output.width);
             
             if(loc < output.pixels.length)
             {

@@ -52,7 +52,7 @@ public class EfficientBlurFilter extends BaseConvolucion
       float gsum = 0;
       float bsum = 0;
       
-      int location = pixelLocation(0, y);
+      int location = pixelLocation(0, y, imageWidth);
       
       //Se suman los primeros n valores para el promedio del primer pixel (suma inicial)
       for(int i = 0; i < kx; i++)
@@ -60,7 +60,7 @@ public class EfficientBlurFilter extends BaseConvolucion
         int ddx = i - dx;
         ddx = (ddx < 0)? 0 : (ddx >= input.width) ? input.width - 1 : ddx;
         
-        int tl = pixelLocation(ddx, y);
+        int tl = pixelLocation(ddx, y, imageWidth);
         rsum += red(input.pixels[tl]);
         gsum += green(input.pixels[tl]);
         bsum += blue(input.pixels[tl]);
@@ -81,8 +81,8 @@ public class EfficientBlurFilter extends BaseConvolucion
           next = (next >= input.width) ? input.width - 1 : next;
           
           //Indice de los pixeles
-          int tminus = pixelLocation(last, y);
-          int tplus = pixelLocation(next, y);
+          int tminus = pixelLocation(last, y, imageWidth);
+          int tplus = pixelLocation(next, y, imageWidth);
           
           //Colores de los pixeles
           int lcolor = input.pixels[tminus];
@@ -98,7 +98,7 @@ public class EfficientBlurFilter extends BaseConvolucion
           gsum += green(ncolor);
           bsum += blue(ncolor);
           
-          location = pixelLocation(x, y);
+          location = pixelLocation(x, y, imageWidth);
           
           temp.pixels[location] = color(rsum / kx, gsum / kx, bsum / kx);
       }
@@ -112,7 +112,7 @@ public class EfficientBlurFilter extends BaseConvolucion
       float gsum = 0;
       float bsum = 0;
       
-      int location = pixelLocation(x, 0);
+      int location = pixelLocation(x, 0, imageWidth);
       
       //Se suman los primeros n valores para el promedio del primer pixel (suma inicial)
       for(int i = 0; i < ky; i++)
@@ -120,7 +120,7 @@ public class EfficientBlurFilter extends BaseConvolucion
         int ddy = i - dy;
         ddy = (ddy < 0)? 0 : (ddy >= input.height) ? input.height - 1 : ddy;
         
-        int tl = pixelLocation(x, ddy);
+        int tl = pixelLocation(x, ddy, imageWidth);
         rsum += red(temp.pixels[tl]);
         gsum += green(temp.pixels[tl]);
         bsum += blue(temp.pixels[tl]);
@@ -139,8 +139,8 @@ public class EfficientBlurFilter extends BaseConvolucion
           next = (next >= input.height) ? input.height - 1 : next;
           
           //Indices de los pixeles
-          int tminus = pixelLocation(x, last);
-          int tplus = pixelLocation(x, next);
+          int tminus = pixelLocation(x, last, imageWidth);
+          int tplus = pixelLocation(x, next, imageWidth);
           
           //Colores de los pixeles
           int lcolor = temp.pixels[tminus];
@@ -156,7 +156,7 @@ public class EfficientBlurFilter extends BaseConvolucion
           gsum += green(ncolor);
           bsum += blue(ncolor);
           
-          location = pixelLocation(x, y);
+          location = pixelLocation(x, y, imageWidth);
           
           output.pixels[location] = color(rsum / ky, gsum / ky, bsum /ky);
       }
@@ -218,7 +218,7 @@ public class MotionBlurFilter extends BaseConvolucion
          }
          
          //Tomar valores del pixel más cercano
-         location = pixelLocation((int)px,(int)py);
+         location = pixelLocation((int)px,(int)py, imageWidth);
          r += red(pix[location]);
          g += green(pix[location]);
          b += blue(pix[location]);

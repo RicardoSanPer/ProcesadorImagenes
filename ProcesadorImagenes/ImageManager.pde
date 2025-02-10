@@ -81,6 +81,25 @@ public class ImageProcessor
       f.HideControls();
     }
     filtros.get(i).ShowControls();
+    
+    resetProcessed();
+  }
+  
+  private void resetProcessed()
+  {
+    processed.resize(base.width, base.height);
+    base.loadPixels();
+    processed.loadPixels();
+    for(int i = 0; i < base.height; i++)
+    {
+      for(int j = 0; j < base.width; j++)
+      {
+        int location = i * base.height + j;
+        processed.pixels[location] = base.pixels[location];
+      }
+    }
+    processed.updatePixels();
+    base.updatePixels();
   }
   
   /**

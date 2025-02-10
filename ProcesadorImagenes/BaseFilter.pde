@@ -40,7 +40,7 @@ public abstract class BaseFilter
     {
       for(int x = 0; x < imageWidth; x++)
       {
-        location = pixelLocation(x, y);
+        location = pixelLocation(x, y, imageWidth);
         output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
     }
@@ -92,9 +92,9 @@ public abstract class BaseFilter
   *  @param y coordenada y del pixel en la imagen
   *  @return indice correspondiente del pixel en el arreglo
   */
-  protected int pixelLocation(int x, int y)
+  protected int pixelLocation(int x, int y, int w)
   {
-    return x + y * imageWidth;
+    return x + y * w;
   }
   
   public String GetName()
@@ -154,7 +154,7 @@ public class BaseConvolucion extends BaseFilter
         ly = ly < 0 ? 0 : ly >= imageHeight ? imageHeight - 1 : ly;
         
         //Posicion en el arreglo de pixeles del pixel vecino
-        int ld = pixelLocation(lx, ly);
+        int ld = pixelLocation(lx, ly, imageWidth);
         ld = ld < 0 ? 0 : ld > pix.length ? pix.length - 1 : ld;
         
         r += red(pix[ld]) * kernel[i][j];
