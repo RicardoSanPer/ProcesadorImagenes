@@ -21,6 +21,8 @@ public class SopaLetrasFilter extends BaseFilter
   
   Textfield frase;
   String luminosidad = "MNH#QAO0Y2$%+. ";
+  
+  //Codidos UNICODE para los naipes
   int[][] suits = { //Espadas
                          {
                          unhex("1F0A0"),
@@ -70,6 +72,7 @@ public class SopaLetrasFilter extends BaseFilter
                          unhex("1F0D3"),
                          unhex("1F0D2"),
                          unhex("1F0D1")}};
+  //Codigos UNICODE para los dominos                       
   int[][] dominos = {{unhex("1F093"),unhex("1F092"),unhex("1F091"),unhex("1F090"),unhex("1F08F"),unhex("1F08E"),unhex("1F08D")},
                      {unhex("1F08C"),unhex("1F08B"),unhex("1F08A"),unhex("1F089"),unhex("1F088"),unhex("1F087"),unhex("1F086")},
                      {unhex("1F085"),unhex("1F084"),unhex("1F083"),unhex("1F082"),unhex("1F081"),unhex("1F080"),unhex("1F07F")},
