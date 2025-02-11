@@ -103,6 +103,31 @@ public abstract class BaseFilter
     return x + y * w;
   }
   
+  /** Dado un color regresa su valor blanco/negro
+  *  @param col color
+  *  @return float con el valor
+  */
+  protected float grayscale(int col)
+  {
+    return (red(col) + green(col) + blue(col))/3;
+  }
+  
+  /**
+  *  Cuantiza un valor
+  *  @param value valor a cuanti
+  *  @param tones numero de tonos/valores
+  *  @param maxValue valor maximo del valor a cuantizar
+  *  @return float valor cuantizado
+  */
+  protected float quantizeValue(float value, float tones, float maxValue)
+  {
+    float factor = maxValue / (tones - 1);
+    float i = value / factor;
+    i = (i % 1 > 0.5)? (float)Math.ceil(i) : (float)Math.floor(i);
+    
+    return i;
+  }
+  
   public String GetName()
   {
     return name;

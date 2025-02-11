@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class SopaLetrasFilter extends BaseFilter
 {
   Button save;
@@ -12,20 +14,80 @@ public class SopaLetrasFilter extends BaseFilter
   Toggle useQ;
   
   Textfield frase;
-  String luminosidad = "MNH#QAO0Y2$%+._";
-  String heartSuit = new String(Character.toChars(unhex("1F0A1")));
-  
+  String luminosidad = "MNH#QAO0Y2$%+. ";
+  int[][] suits = { //Espadas
+                         {
+                         unhex("1F0A0"),
+                         unhex("1F0AA"),
+                         unhex("1F0A9"),
+                         unhex("1F0A8"),
+                         unhex("1F0A7"),
+                         unhex("1F0A6"),
+                         unhex("1F0A5"),
+                         unhex("1F0A4"),
+                         unhex("1F0A3"),
+                         unhex("1F0A2"),
+                         unhex("1F0A1")},
+                         //Corazones
+                         {unhex("1F0A0"),
+                         unhex("1F0BA"),
+                         unhex("1F0B9"),
+                         unhex("1F0B8"),
+                         unhex("1F0B7"),
+                         unhex("1F0B6"),
+                         unhex("1F0B5"),
+                         unhex("1F0B4"),
+                         unhex("1F0B3"),
+                         unhex("1F0B2"),
+                         unhex("1F0B1")},
+                         //Diamantes
+                         {unhex("1F0A0"),
+                         unhex("1F0CA"),
+                         unhex("1F0C9"),
+                         unhex("1F0C8"),
+                         unhex("1F0C7"),
+                         unhex("1F0C6"),
+                         unhex("1F0C5"),
+                         unhex("1F0C4"),
+                         unhex("1F0C3"),
+                         unhex("1F0C2"),
+                         unhex("1F0C1")},
+                         //Clubs
+                         {unhex("1F0A0"),
+                         unhex("1F0DA"),
+                         unhex("1F0D9"),
+                         unhex("1F0D8"),
+                         unhex("1F0D7"),
+                         unhex("1F0D6"),
+                         unhex("1F0D5"),
+                         unhex("1F0D4"),
+                         unhex("1F0D3"),
+                         unhex("1F0D2"),
+                         unhex("1F0D1")}};
+  int[][] dominos = {{unhex("1F093"),unhex("1F092"),unhex("1F091"),unhex("1F090"),unhex("1F08F"),unhex("1F08E"),unhex("1F08D")},
+                     {unhex("1F08C"),unhex("1F08B"),unhex("1F08A"),unhex("1F089"),unhex("1F088"),unhex("1F087"),unhex("1F086")},
+                     {unhex("1F085"),unhex("1F084"),unhex("1F083"),unhex("1F082"),unhex("1F081"),unhex("1F080"),unhex("1F07F")},
+                     {unhex("1F07E"),unhex("1F07D"),unhex("1F07C"),unhex("1F07B"),unhex("1F07A"),unhex("1F079"),unhex("1F078")},
+                     {unhex("1F077"),unhex("1F076"),unhex("1F075"),unhex("1F074"),unhex("1F073"),unhex("1F072"),unhex("1F071")},
+                     {unhex("1F070"),unhex("1F06F"),unhex("1F06E"),unhex("1F06D"),unhex("1F06C"),unhex("1F06B"),unhex("1F06A")},
+                     {unhex("1F069"),unhex("1F068"),unhex("1F067"),unhex("1F066"),unhex("1F065"),unhex("1F064"),unhex("1F063")},
+                    };
+  //String de salida para el codigo html
   String outputHTML;
   
   //Filtros
   GrayScaleFilter filtrobn;
   QuantizeFilter filtroq;
   
+  //Random
+  Random rand = new Random();
+  
   public SopaLetrasFilter()
   {
     super("Sopa de Letras");
     filtrobn = new GrayScaleFilter("FiltroSopaBN");
     filtroq = new QuantizeFilter("FiltroSopaQ");
+    
   }
   
   public SopaLetrasFilter(String n)
@@ -39,25 +101,30 @@ public class SopaLetrasFilter extends BaseFilter
     return color(0,0,0);
   }
   
-   public void ProcessImage(PImage input, PImage output)
+  public void ProcessImage(PImage input, PImage output)
   {
     //Cambiar el tamaño de la imagen de salida (previsualizacion) por cuestiones de rendimiento
     //El tamaño se calcula en base al tamaño del texto relativo a la imagen
     resizeImage(input, output);
     
+    int colorMode = (int)modoColor.getValue();
+    int textMode = (int)modoTexto.getValue();
+    
     //Usar escala de grises
-    if(modoColor.getValue()==2)
+    if(colorMode == 2 || textMode != 0)
     {
       filtrobn.ProcessImage(output,output);
     }
     
-    //cuantizar
-    if(modoColor.getValue() != 0 && useQ.getBooleanValue())
+    //cuantizar si hay modo de color
+    if(useQ.getBooleanValue())
     {
-      filtroq.SetSingleChannelRandom(modoColor.getValue() == 2);
+      //Realizar dithering en los tres canales con el mismo valor cuando es imagen a blanco y negro
+      filtroq.SetSingleChannelRandom(modoColor.getValue() == 2 || textMode != 0);
       filtroq.ProcessImage(output, output);
     }
     
+    //String de donde se sacan las letras
     String sample = "M";
     if(frase.getText().length() > 0)
     {
@@ -74,55 +141,95 @@ public class SopaLetrasFilter extends BaseFilter
     imageWidth = input.width;
     imageHeight = input.height;
     
-    outputHTML = "<!DOCTYPE html><body style=\"font-family: Courier; background-color:black\">";
+    //Encabezado de html
+    outputHTML = "<!DOCTYPE html><body style=\"line-height:0.8; font-family: ";
+    
+    if(textMode < 2)
+    {
+      outputHTML += "Courier New;";
+    }
+    else
+    {
+      outputHTML += "Segoe UI Symbol;";
+    }
+    outputHTML += "\">";
+    
     for(int y = 0; y < output.height; y++)
     {
       String line = "";
       for(int x = 0; x < output.width; x++)
       {
         location = pixelLocation(x, y, output.width);
+        
         //Por alguna razon es mas rápido hacer la construccion del texto aqui
         //en vez de en pixelProcessing
         if(location < output.pixels.length)
         {
-          char c = 'M';
+          String c = "M";
+          
           //Si se usa modo de frase, iterar sobre las letras de la frase
-          if(modoTexto.getValue() == 0)
+          if(textMode == 0)
           {
-            c = sample.charAt(counter);
+            c = Character.toString(sample.charAt(counter));
           }
           //De otro modo tomar un caracter en base a la luminosidad del color
-          else if (modoTexto.getValue() == 1)
-          {
-            float r = red(output.pixels[location]);
-            float g = green(output.pixels[location]);
-            float b = blue(output.pixels[location]);
+          else
+          { 
+            float k = grayscale(output.pixels[location]);
             
-            float k = (r + g + b) / 3;
-            
+            int cociente = textMode == 1? luminosidad.length(): 
+                            textMode == 2? suits[0].length :
+                            textMode == 3? dominos[0].length : 1;
             //Similar a la cuantizacion
-            float factor = 255 / (luminosidad.length()-1);
-            float i = k / factor;
-            i = (i % 1 > 0.5)? (float)Math.ceil(i) : (float)Math.floor(i);
+            float i = quantizeValue(k, cociente, 255);
             
-            c = luminosidad.charAt((int)i);
+            //Si se usa el modo luminosidad, tomar de la cadena "MNH#QAO0Y2$%+. "
+            if(textMode == 1)
+            {
+              c = Character.toString(luminosidad.charAt((int)i));
+            }
+            //Si se usa el modo poker, tomar una carta del valor adecuado y de uno de los suits al azar
+            else if(textMode == 2)
+            {
+              int rnd = (int) (rand.nextDouble() * 4);
+              c = new String(Character.toChars(suits[rnd][(int)i]));
+            }
+            else if(textMode == 3)
+            {
+              int y2 = y + 1;
+              if(y2 > output.height)
+              {
+                continue;
+              }
+              int l2 = pixelLocation(x,y2, output.width);
+              l2 = l2 > output.height? output.height - 1 : l2;
+              
+              float k2 = grayscale(output.pixels[l2]);
+              float i2 = quantizeValue(k2, dominos[0].length, 255);
+              
+              c = new String(Character.toChars(dominos[(int)i][(int)i2]));
+            }
           }
-          
-          if(modoColor.getValue() != 0)
+ 
+          //Si se usa modo a color o a blanco/negro (grises), establecer un color a la letra
+          if(colorMode != 0)
           {
-            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">";  
+            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";  
           }
-          
-          line += c;
-          
-          if(modoColor.getValue() !=0)
-          {
-            line += "</span>";
+          //De otro modo simplemente agregar la letra
+          else {
+            line += c;
           }
+          //Aumentar contador
           counter ++;
           counter = counter % sampleLength;
         }
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
+      }
+      
+      if(textMode == 3)
+      {
+        y++;
       }
       outputHTML += line + "<br>";
       //println((float)y / imageHeight);
@@ -165,13 +272,13 @@ public class SopaLetrasFilter extends BaseFilter
     //Controles blanco y negro
     filtrobn.StartControls(p5);
     filtrobn.GetGroup().setGroup(controls);
-    filtrobn.GetGroup().setPosition(0,240);
+    filtrobn.GetGroup().setPosition(0,180);
     filtrobn.GetGroup().show();
     
     //Controles cuantizacion
     filtroq.StartControls(p5);
     filtroq.GetGroup().setGroup(controls);
-    filtroq.GetGroup().setPosition(0, 300);
+    filtroq.GetGroup().setPosition(0, 240);
     filtroq.GetGroup().show();
     
     
@@ -181,6 +288,8 @@ public class SopaLetrasFilter extends BaseFilter
     modoTexto.getCaptionLabel().setText("Modo de Texto");
     modoTexto.addItem("Texto", modoTexto);
     modoTexto.addItem("Luminosidad", modoTexto);
+    modoTexto.addItem("Poker", modoTexto);
+    modoTexto.addItem("Domino", modoTexto);
     modoTexto.setGroup(controls);
     modoTexto.setPosition(0, 50);
     modoTexto.setBarHeight(30);
@@ -204,7 +313,7 @@ public class SopaLetrasFilter extends BaseFilter
   }
   
   /**
-  *  Redimensiona la entrada en la salida. Igual al mosaico
+  *  Redimensiona la imagen. Igual al mosaico
   *
   *  @param input imagen a re
   *  @param output buffer de salida
