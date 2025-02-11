@@ -9,7 +9,7 @@ void setup()
   size(1200,720);
   
   p5 = new ControlP5(this);
-  p5.setFont(createFont("Arial", 10));
+  p5.setFont(createFont("Segoe UI Symbol", 10));
   
   img = new ImageProcessor();
   ui = new UIManager(p5);

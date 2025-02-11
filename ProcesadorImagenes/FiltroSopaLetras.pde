@@ -6,13 +6,14 @@ public class SopaLetrasFilter extends BaseFilter
   
   //Lista de texto
   ScrollableList modoTexto;
+  ScrollableList modoColor;
   
   //Toggles
-  Toggle useGSF;
   Toggle useQ;
   
   Textfield frase;
   String luminosidad = "MNH#QAO0Y2$%+._";
+  String heartSuit = new String(Character.toChars(unhex("1F0A1")));
   
   String outputHTML;
   
@@ -45,15 +46,15 @@ public class SopaLetrasFilter extends BaseFilter
     resizeImage(input, output);
     
     //Usar escala de grises
-    if(useGSF.getBooleanValue())
+    if(modoColor.getValue()==2)
     {
       filtrobn.ProcessImage(output,output);
     }
     
     //cuantizar
-    if(useQ.getBooleanValue())
+    if(modoColor.getValue() != 0 && useQ.getBooleanValue())
     {
-      filtroq.SetSingleChannelRandom(useGSF.getBooleanValue());
+      filtroq.SetSingleChannelRandom(modoColor.getValue() == 2);
       filtroq.ProcessImage(output, output);
     }
     
@@ -73,7 +74,7 @@ public class SopaLetrasFilter extends BaseFilter
     imageWidth = input.width;
     imageHeight = input.height;
     
-    outputHTML = "<!DOCTYPE html><body>";
+    outputHTML = "<!DOCTYPE html><body style=\"font-family: Courier; background-color:black\">";
     for(int y = 0; y < output.height; y++)
     {
       String line = "";
@@ -85,10 +86,12 @@ public class SopaLetrasFilter extends BaseFilter
         if(location < output.pixels.length)
         {
           char c = 'M';
+          //Si se usa modo de frase, iterar sobre las letras de la frase
           if(modoTexto.getValue() == 0)
           {
             c = sample.charAt(counter);
           }
+          //De otro modo tomar un caracter en base a la luminosidad del color
           else if (modoTexto.getValue() == 1)
           {
             float r = red(output.pixels[location]);
@@ -97,13 +100,25 @@ public class SopaLetrasFilter extends BaseFilter
             
             float k = (r + g + b) / 3;
             
+            //Similar a la cuantizacion
             float factor = 255 / (luminosidad.length()-1);
             float i = k / factor;
             i = (i % 1 > 0.5)? (float)Math.ceil(i) : (float)Math.floor(i);
             
             c = luminosidad.charAt((int)i);
           }
-          line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";
+          
+          if(modoColor.getValue() != 0)
+          {
+            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">";  
+          }
+          
+          line += c;
+          
+          if(modoColor.getValue() !=0)
+          {
+            line += "</span>";
+          }
           counter ++;
           counter = counter % sampleLength;
         }
@@ -137,11 +152,31 @@ public class SopaLetrasFilter extends BaseFilter
     frase = new Textfield(p5, "SoupText");
     frase.setCaptionLabel("Frase");
     frase.getCaptionLabel().hide();
-    frase.setPosition(0, 100);
+    frase.setPosition(0, 120);
     frase.setGroup(controls);
-    frase.setText("FRASE O LETRA");
+    frase.setText("THE END IS NEVER ");
     
-    //Lista modos
+    //Usar cuantizacion
+    useQ = new Toggle(p5, "SoupQ");
+    SetupToggle(useQ, "Cuantizacion", 90);
+    useQ.setPosition(120, 90);
+    useQ.setGroup(controls);
+    
+    //Controles blanco y negro
+    filtrobn.StartControls(p5);
+    filtrobn.GetGroup().setGroup(controls);
+    filtrobn.GetGroup().setPosition(0,240);
+    filtrobn.GetGroup().show();
+    
+    //Controles cuantizacion
+    filtroq.StartControls(p5);
+    filtroq.GetGroup().setGroup(controls);
+    filtroq.GetGroup().setPosition(0, 300);
+    filtroq.GetGroup().show();
+    
+    
+    
+    //Modos texto
     modoTexto = new ScrollableList(p5, "SoupMode");
     modoTexto.getCaptionLabel().setText("Modo de Texto");
     modoTexto.addItem("Texto", modoTexto);
@@ -153,31 +188,18 @@ public class SopaLetrasFilter extends BaseFilter
     modoTexto.setOpen(false);
     modoTexto.setValue(0);
     
-    
-    
-    //Toggles
-    //Usar escala de grises
-    useGSF = new Toggle(p5, "SoupGS");
-    SetupToggle(useGSF, "Grises", 50);
-    useGSF.setPosition(120,50);
-    useGSF.setGroup(controls);
-    //Usar cuantizacion
-    useQ = new Toggle(p5, "SoupQ");
-    SetupToggle(useQ, "Cuantizacion", 70);
-    useQ.setPosition(120, 70);
-    useQ.setGroup(controls);
-    
-    //Controles blanco y negro
-    filtrobn.StartControls(p5);
-    filtrobn.GetGroup().setGroup(controls);
-    filtrobn.GetGroup().setPosition(0,220);
-    filtrobn.GetGroup().show();
-    
-    //Controles cuantizacion
-    filtroq.StartControls(p5);
-    filtroq.GetGroup().setGroup(controls);
-    filtroq.GetGroup().setPosition(0, 280);
-    filtroq.GetGroup().show();
+    //Modos color
+    modoColor = new ScrollableList(p5, "SoupColorMode");
+    modoColor.getCaptionLabel().setText("Modo de color");
+    modoColor.addItem("Sin Color", modoColor);
+    modoColor.addItem("Color", modoColor);
+    modoColor.addItem("Grises", modoColor);
+    modoColor.setGroup(controls);
+    modoColor.setPosition(120, 50);
+    modoColor.setBarHeight(30);
+    modoColor.setItemHeight(25);
+    modoColor.setOpen(false);
+    modoColor.setValue(0);
     
   }
   
