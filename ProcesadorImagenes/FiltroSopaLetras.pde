@@ -5,6 +5,17 @@ import java.util.Random;
 *  Convierte la imagen a texto html
 *
 *
+*
+*  Controles:
+*  Texto: El filtro repite un caracter o frase para componer la imagen
+*  Luminosidad: El filtro elige un caracter en base a la luminosidad del pixel
+*  Poker: El filtro elige una carta de poker en base a la luminosidad del pixel (elige palo al azar)
+*  Domino: El filtro elige una ficha de domino en base a la luminosidad del pixel y el pixel inferior
+*
+*  Sin color: El filtro no cambia el color del texto.
+*  Color: El filtro colorea cada caracter del texto en base al pixel
+*  Grises: El filtro primero convierte la imagen a escala de grises
+*
 */
 public class SopaLetrasFilter extends BaseFilter
 {
@@ -129,7 +140,7 @@ public class SopaLetrasFilter extends BaseFilter
     int textMode = (int)modoTexto.getValue();
     
     //Usar escala de grises
-    if(colorMode == 2 || textMode != 0)
+    if(colorMode == 2 || (textMode != 0 && colorMode != 1))
     {
       filtrobn.ProcessImage(output,output);
     }
@@ -160,7 +171,9 @@ public class SopaLetrasFilter extends BaseFilter
     imageHeight = input.height;
     
     //Encabezado de html
-    outputHTML = "<!DOCTYPE html><body style=\"line-height:0.8; font-family: ";
+    //El estilo reduce el espaciado entre lineas
+    //y previene que html omita espacios en blanco
+    outputHTML = "<!DOCTYPE html><body style=\"line-height:0.8; background-color: black; white-space: pre; font-family: ";
     
     //Elegir fuente
     if(textMode < 2)
