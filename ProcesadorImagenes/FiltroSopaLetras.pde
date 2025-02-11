@@ -1,5 +1,11 @@
 import java.util.Random;
 
+/***
+*  Filtro sopa de letras
+*  Convierte la imagen a texto html
+*
+*
+*/
 public class SopaLetrasFilter extends BaseFilter
 {
   Button save;
@@ -101,6 +107,15 @@ public class SopaLetrasFilter extends BaseFilter
     return color(0,0,0);
   }
   
+  /*
+  *  Filtro. En resumen:
+  *  1) Preprocesa la imagen aplicando filtros y redimensionando
+  *  2) Dependiendo del modo de texto usado, elige caracteres para formar la imagen
+  *  3) Depenidendo del mode de color usado, elide el color de cada caracter
+  *  4) Escribe el resultado como un archivo HTML
+  *
+  *
+  */
   public void ProcessImage(PImage input, PImage output)
   {
     //Cambiar el tamaño de la imagen de salida (previsualizacion) por cuestiones de rendimiento
@@ -144,16 +159,21 @@ public class SopaLetrasFilter extends BaseFilter
     //Encabezado de html
     outputHTML = "<!DOCTYPE html><body style=\"line-height:0.8; font-family: ";
     
+    //Elegir fuente
     if(textMode < 2)
     {
+      //No proporcional
       outputHTML += "Courier New;";
     }
     else
     {
+      //Con glifos para las cartas/dominos
       outputHTML += "Segoe UI Symbol;";
     }
+    
     outputHTML += "\">";
     
+    //Procesar pixeles
     for(int y = 0; y < output.height; y++)
     {
       String line = "";
@@ -194,6 +214,8 @@ public class SopaLetrasFilter extends BaseFilter
               int rnd = (int) (rand.nextDouble() * 4);
               c = new String(Character.toChars(suits[rnd][(int)i]));
             }
+            //Si se usa el modo domino, samplear el pixel de abajo para elegir un domino
+            //vertical adecuado
             else if(textMode == 3)
             {
               int y2 = y + 1;
@@ -226,7 +248,7 @@ public class SopaLetrasFilter extends BaseFilter
         }
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
-      
+      //Si se utilizó el modo domino, saltarse una linea (pues ya fue procesada)
       if(textMode == 3)
       {
         y++;
@@ -313,7 +335,7 @@ public class SopaLetrasFilter extends BaseFilter
   }
   
   /**
-  *  Redimensiona la imagen. Igual al mosaico
+  *  Redimensiona la imagen. Similar al mosaico
   *
   *  @param input imagen a re
   *  @param output buffer de salida
