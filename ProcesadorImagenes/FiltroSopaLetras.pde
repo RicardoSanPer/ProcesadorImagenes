@@ -87,8 +87,8 @@ public class SopaLetrasFilter extends BaseFilter
   int[][] dominos = {{unhex("1F093"),unhex("1F092"),unhex("1F091"),unhex("1F090"),unhex("1F08F"),unhex("1F08E"),unhex("1F08D")},
                      {unhex("1F08C"),unhex("1F08B"),unhex("1F08A"),unhex("1F089"),unhex("1F088"),unhex("1F087"),unhex("1F086")},
                      {unhex("1F085"),unhex("1F084"),unhex("1F083"),unhex("1F082"),unhex("1F081"),unhex("1F080"),unhex("1F07F")},
-                     {unhex("1F07E"),unhex("1F07D"),unhex("1F07C"),unhex("1F07B"),unhex("1F07A"),unhex("1F079"),unhex("1F078")},
-                     {unhex("1F077"),unhex("1F076"),unhex("1F075"),unhex("1F074"),unhex("1F073"),unhex("1F072"),unhex("1F071")},
+                     {unhex("1F07E"),unhex("1F07D"),unhex("1F07C"),unhex("1F07B"),unhex("1F07A"),unhex("1F079"),unhex("1F07A")},
+                     {unhex("1F077"),unhex("1F076"),unhex("1F075"),unhex("1F074"),unhex("1F073"),unhex("1F072"),unhex("1F073")},
                      {unhex("1F070"),unhex("1F06F"),unhex("1F06E"),unhex("1F06D"),unhex("1F06C"),unhex("1F06B"),unhex("1F06A")},
                      {unhex("1F069"),unhex("1F068"),unhex("1F067"),unhex("1F066"),unhex("1F065"),unhex("1F064"),unhex("1F063")},
                     };
@@ -171,9 +171,9 @@ public class SopaLetrasFilter extends BaseFilter
     imageHeight = input.height;
     
     //Encabezado de html
-    //El estilo reduce el espaciado entre lineas
-    //y previene que html omita espacios en blanco
-    outputHTML = "<!DOCTYPE html><body style=\"line-height:0.8; background-color: black; white-space: pre; font-family: ";
+    //El estilo  previene que html omita espacios en blanco
+    //background-color: black;
+    outputHTML = "<!DOCTYPE html><body style=\" white-space: pre; font-family: ";
     
     //Elegir fuente
     if(textMode < 2)
@@ -187,12 +187,20 @@ public class SopaLetrasFilter extends BaseFilter
       outputHTML += "Segoe UI Symbol;";
     }
     
+    //Si se usa color, cambiar el fondo a negro
+    //para mejorar elcontraste de los colores con el fondo
+    if(colorMode > 0)
+    {
+      outputHTML += "background-color: black;";
+    }
+    
     outputHTML += "\">";
     
     //Procesar pixeles
     for(int y = 0; y < output.height; y++)
     {
       String line = "";
+      
       for(int x = 0; x < output.width; x++)
       {
         location = pixelLocation(x, y, output.width);
@@ -219,6 +227,13 @@ public class SopaLetrasFilter extends BaseFilter
             //Similar a la cuantizacion
             float i = quantizeValue(k, cociente, 255);
             
+            //Si se usan colores, invertir la luminosidad (caracter a elegit) por cuestiones de contraste con
+            //el fondo negro
+            if(colorMode > 0)
+            {
+              i = cociente - i -1;
+            }
+            
             //Si se usa el modo luminosidad, tomar de la cadena "MNH#QAO0Y2$%+. "
             if(textMode == 1)
             {
@@ -235,15 +250,22 @@ public class SopaLetrasFilter extends BaseFilter
             else if(textMode == 3)
             {
               int y2 = y + 1;
+              
               if(y2 > output.height)
               {
                 continue;
               }
               int l2 = pixelLocation(x,y2, output.width);
-              l2 = l2 > output.height? output.height - 1 : l2;
+              l2 = l2 >= output.pixels.length? output.pixels.length - 1 : l2;
               
               float k2 = grayscale(output.pixels[l2]);
-              float i2 = quantizeValue(k2, dominos[0].length, 255);
+              float i2 = quantizeValue(k2, cociente, 255);
+              
+              //Invertir en fondo oscuro
+              if(colorMode > 0)
+              {
+                i2 = cociente - i2 -1;
+              }
               
               c = new String(Character.toChars(dominos[(int)i][(int)i2]));
             }
@@ -368,13 +390,13 @@ public class SopaLetrasFilter extends BaseFilter
     int nsegments = (int)(input.width / sizex);
     int msegments = (int)(input.height / sizey);
     
-    output.resize(nsegments+1, msegments+1);
+    output.resize(nsegments, msegments);
     
     //Iterar por mosaicos de arriba a abajo. Contar uno mas en caso de mosaicos truncados
-    for(int j = 0; j <= msegments; j++)
+    for(int j = 0; j < msegments; j++)
     {
       //Contar uno mas para tomar en cuenta casos en que hay mosaicos truncados
-      for(int i = 0; i <= nsegments; i++)
+      for(int i = 0; i < nsegments; i++)
       {
         float count = 0;
         float r = 0;
