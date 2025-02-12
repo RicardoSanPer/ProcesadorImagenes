@@ -4,17 +4,23 @@ import java.util.Random;
 *  Filtro sopa de letras
 *  Convierte la imagen a texto html
 *
+*  El filtro primero preprocesa la imagen de entrada al reducir su tamaño (para reducir el numero de muestras)
+*  y aplicando filtros. Luego toma la muestra de los colores y elige/modifica las letras del texto a
+*  producir en base al color y a los parametros del filtro.
+*  
+*  Modo domino y poker usan los caracteres de UNICODE correspondientes para que sea agnostico a fuentes. Se trató de usar
+*  una fuente nativa de windows que por defecto despliega los glifos
 *
 *
 *  Controles:
 *  Texto: El filtro repite un caracter o frase para componer la imagen
 *  Luminosidad: El filtro elige un caracter en base a la luminosidad del pixel
 *  Poker: El filtro elige una carta de poker en base a la luminosidad del pixel (elige palo al azar)
-*  Domino: El filtro elige una ficha de domino en base a la luminosidad del pixel y el pixel inferior
+*  Domino: El filtro elige una ficha de domino en base a la luminosidad del pixel y del pixel inferior
 *
 *  Sin color: El filtro no cambia el color del texto.
-*  Color: El filtro colorea cada caracter del texto en base al pixel
-*  Grises: El filtro primero convierte la imagen a escala de grises
+*  Color: El filtro colorea cada caracter del texto en base al pixel.
+*  Grises: El filtro primero convierte la imagen a escala de grises y colorea cada caracter en base a este.
 *
 */
 public class SopaLetrasFilter extends BaseFilter
@@ -83,6 +89,7 @@ public class SopaLetrasFilter extends BaseFilter
                          unhex("1F0D3"),
                          unhex("1F0D2"),
                          unhex("1F0D1")}};
+                         
   //Codigos UNICODE para los dominos                       
   int[][] dominos = {{unhex("1F093"),unhex("1F092"),unhex("1F091"),unhex("1F090"),unhex("1F08F"),unhex("1F08E"),unhex("1F08D")},
                      {unhex("1F08C"),unhex("1F08B"),unhex("1F08A"),unhex("1F089"),unhex("1F088"),unhex("1F087"),unhex("1F086")},
@@ -216,6 +223,9 @@ public class SopaLetrasFilter extends BaseFilter
           if(textMode == 0)
           {
             c = Character.toString(sample.charAt(counter));
+            //Aumentar contador
+            counter ++;
+            counter = counter % sampleLength;
           }
           //De otro modo tomar un caracter en base a la luminosidad del color
           else
@@ -281,9 +291,6 @@ public class SopaLetrasFilter extends BaseFilter
           else {
             line += c;
           }
-          //Aumentar contador
-          counter ++;
-          counter = counter % sampleLength;
         }
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
