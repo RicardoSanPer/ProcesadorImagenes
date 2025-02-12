@@ -142,8 +142,8 @@ public class SopaLetrasFilter extends BaseFilter
   {
     //Cambiar el tamaño de la imagen de salida (previsualizacion) por cuestiones de rendimiento
     //El tamaño se calcula en base al tamaño del texto relativo a la imagen
-    //resizeImage(input, output, (int)kernelSize.GetValue(), (int)kernelSize.GetValue());
-    output.resize(output.width / (int)kernelSize.GetValue(), output.height / (int)kernelSize.GetValue());
+    resizeImage(input, output, (int)kernelSize.GetValue(), (int)kernelSize.GetValue());
+    //output.resize(output.width / (int)kernelSize.GetValue(), output.height / (int)kernelSize.GetValue());
     
     int colorMode = (int)modoColor.getValue();
     int textMode = (int)modoTexto.getValue();
@@ -182,7 +182,7 @@ public class SopaLetrasFilter extends BaseFilter
     //Encabezado de html
     //El estilo  previene que html omita espacios en blanco
     //background-color: black;
-    outputHTML = "<!DOCTYPE html><body style=\" white-space: pre; font-family: ";
+    outputHTML = "<!DOCTYPE html><body style=\" white-space: pre; font-size: 7px; font-family: ";
     
     //Elegir fuente
     if(textMode < 2)
@@ -262,11 +262,8 @@ public class SopaLetrasFilter extends BaseFilter
             else if(textMode == 3)
             {
               int y2 = y + 1;
+              y2 = y2 >= output.height ? output.height -1 : y2;
               
-              if(y2 > output.height)
-              {
-                continue;
-              }
               int l2 = pixelLocation(x,y2, output.width);
               l2 = l2 >= output.pixels.length? output.pixels.length - 1 : l2;
               
@@ -286,7 +283,7 @@ public class SopaLetrasFilter extends BaseFilter
           //Si se usa modo a color o a blanco/negro (grises), establecer un color a la letra
           if(colorMode != 0)
           {
-            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";  
+            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";
           }
           //De otro modo simplemente agregar la letra
           else {
