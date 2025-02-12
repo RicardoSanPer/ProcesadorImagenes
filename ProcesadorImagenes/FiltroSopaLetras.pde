@@ -99,6 +99,7 @@ public class SopaLetrasFilter extends BaseFilter
                      {unhex("1F070"),unhex("1F06F"),unhex("1F06E"),unhex("1F06D"),unhex("1F06C"),unhex("1F06B"),unhex("1F06A")},
                      {unhex("1F069"),unhex("1F068"),unhex("1F067"),unhex("1F066"),unhex("1F065"),unhex("1F064"),unhex("1F063")},
                     };
+                    
   //String de salida para el codigo html
   String outputHTML;
   
@@ -348,8 +349,6 @@ public class SopaLetrasFilter extends BaseFilter
     filtroq.GetGroup().setGroup(controls);
     filtroq.GetGroup().setPosition(0, 240);
     filtroq.GetGroup().show();
-    
-    
     
     //Modos texto
     modoTexto = new ScrollableList(p5, "SoupMode");
