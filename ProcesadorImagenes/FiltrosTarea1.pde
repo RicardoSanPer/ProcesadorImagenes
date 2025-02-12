@@ -545,8 +545,8 @@ public class QuantizeFilter extends BaseFilter
     controls.setPosition(width - 250, 30);
     
     //Numero de tonos
-    slider = new CustomSliderController(controls, p5, "Tones" + name, "Tonos", 20);
-    slider.SetRange(2, 16);
+    slider = new CustomSliderController(controls, p5, "Tones" + name, "Tonos por Canal", 20);
+    slider.SetRange(2, 256);
     slider.SetValue(2);
     
     //Controles de dithering

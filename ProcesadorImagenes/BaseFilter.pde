@@ -128,6 +128,77 @@ public abstract class BaseFilter
     return i;
   }
   
+  
+  /**
+  *  Redimensiona la imagen. Similar al mosaico
+  *
+  *  @param input imagen a re
+  *  @param output buffer de salida
+  *  @param sizex relacion de ancho en pixeles
+  *  @param sizey relacion alto en pixeles
+  */
+  protected void resizeImage(PImage input, PImage output, int sizex, int sizey)
+  {
+    input.loadPixels();
+    output.loadPixels();
+    
+    //Numero de segmentos/mosaicos en los que se divide la imagen
+    int nsegments = (int)(input.width / sizex);
+    int msegments = (int)(input.height / sizey);
+    
+    output.resize(nsegments, msegments);
+    
+    //Iterar por mosaicos de arriba a abajo. Contar uno mas en caso de mosaicos truncados
+    for(int j = 0; j < msegments; j++)
+    {
+      //Contar uno mas para tomar en cuenta casos en que hay mosaicos truncados
+      for(int i = 0; i < nsegments; i++)
+      {
+        float count = 0;
+        float r = 0;
+        float g = 0;
+        float b = 0;
+        
+        //Iterar por cada pixel dentro del mosaico actual para tomar muestra de color
+        for(int x = 0; x < sizex && x + (i * sizex) < input.width; x++)
+        {
+          for(int y = 0; y < sizey && y + (j * sizey) < input.height; y++)
+          {
+            int posy = (int) (y + (j * sizey));
+            int posx = (int) (x + (i * sizex));
+            int loc = pixelLocation(posx, posy, input.width);
+            
+            if(loc < input.pixels.length)
+            {
+              r += red(input.pixels[loc]);
+              g += green(input.pixels[loc]);
+              b += blue(input.pixels[loc]);
+              
+              count++;
+            }
+          }
+        }
+        
+        r /= count;
+        g /= count;
+        b /= count;
+        
+        //Colorear la salida
+        int loc = pixelLocation(i,j, output.width);
+        if(loc < output.pixels.length)
+        {
+          output.pixels[loc] = color(r,g,b);
+        }
+      }
+    }
+    
+    output.updatePixels();
+    
+  }
+  
+  /** Obtener nombre del filtro
+  * @return nombre
+  */
   public String GetName()
   {
     return name;

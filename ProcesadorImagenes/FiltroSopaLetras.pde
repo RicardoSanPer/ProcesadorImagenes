@@ -134,7 +134,8 @@ public class SopaLetrasFilter extends BaseFilter
   {
     //Cambiar el tamaño de la imagen de salida (previsualizacion) por cuestiones de rendimiento
     //El tamaño se calcula en base al tamaño del texto relativo a la imagen
-    resizeImage(input, output);
+    //resizeImage(input, output, (int)kernelSize.GetValue(), (int)kernelSize.GetValue());
+    output.resize(output.width / (int)kernelSize.GetValue(), output.height / (int)kernelSize.GetValue());
     
     int colorMode = (int)modoColor.getValue();
     int textMode = (int)modoTexto.getValue();
@@ -188,7 +189,7 @@ public class SopaLetrasFilter extends BaseFilter
     }
     
     //Si se usa color, cambiar el fondo a negro
-    //para mejorar elcontraste de los colores con el fondo
+    //para mejorar el contraste de los colores con el fondo
     if(colorMode > 0)
     {
       outputHTML += "background-color: black;";
@@ -369,74 +370,6 @@ public class SopaLetrasFilter extends BaseFilter
     modoColor.setItemHeight(25);
     modoColor.setOpen(false);
     modoColor.setValue(0);
-    
-  }
-  
-  /**
-  *  Redimensiona la imagen. Similar al mosaico
-  *
-  *  @param input imagen a re
-  *  @param output buffer de salida
-  */
-  private void resizeImage(PImage input, PImage output)
-  {
-    input.loadPixels();
-    output.loadPixels();
-    //Tamaño del kernel en pixeles
-    float sizex = kernelSize.GetValue();
-    float sizey = kernelSize.GetValue();
-    
-    //Numero de segmentos/mosaicos en los que se divide la imagen
-    int nsegments = (int)(input.width / sizex);
-    int msegments = (int)(input.height / sizey);
-    
-    output.resize(nsegments, msegments);
-    
-    //Iterar por mosaicos de arriba a abajo. Contar uno mas en caso de mosaicos truncados
-    for(int j = 0; j < msegments; j++)
-    {
-      //Contar uno mas para tomar en cuenta casos en que hay mosaicos truncados
-      for(int i = 0; i < nsegments; i++)
-      {
-        float count = 0;
-        float r = 0;
-        float g = 0;
-        float b = 0;
-        
-        //Iterar por cada pixel dentro del mosaico actual para tomar muestra de color
-        for(int x = 0; x < sizex && x + (i * sizex) < input.width; x++)
-        {
-          for(int y = 0; y < sizey && y + (j * sizey) < input.height; y++)
-          {
-            int posy = (int) (y + (j * sizey));
-            int posx = (int) (x + (i * sizex));
-            int loc = pixelLocation(posx, posy, input.width);
-            
-            if(loc < input.pixels.length)
-            {
-              r += red(input.pixels[loc]);
-              g += green(input.pixels[loc]);
-              b += blue(input.pixels[loc]);
-              
-              count++;
-            }
-          }
-        }
-        
-        r /= count;
-        g /= count;
-        b /= count;
-        
-        //Colorear la salida
-        int loc = pixelLocation(i,j, output.width);
-        if(loc < output.pixels.length)
-        {
-          output.pixels[loc] = color(r,g,b);
-        }
-      }
-    }
-    
-    output.updatePixels();
     
   }
   

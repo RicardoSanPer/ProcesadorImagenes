@@ -7,6 +7,7 @@ ImageProcessor img;
 void setup()
 {
   size(1200,720);
+  noSmooth();
   
   p5 = new ControlP5(this);
   p5.setFont(createFont("Segoe UI Symbol", 10));
