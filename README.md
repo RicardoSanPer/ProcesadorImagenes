@@ -53,6 +53,24 @@ Filtros implementados:
     - Filtro de alto contraste invertido
     - FIltro de brillo
     - Niveles RGB
+- Tarea 2 (```FiltroSopaLetras.pde```)
+    - Filtro Sopa de Letras:
+    Tamaño de letra: Numero de pixeles que cada letra cubre.
+    Modos de Texto:
+        - Texto: Repite una letra o frase para construir la imagen.
+        - Luminosidad: Elige una letra de la cadena 'MNH#QAO0Y2$%+. ' en base a la luminosidad del pixel
+        - Poker: Elige una carta en base a la luminosidad del pixel (palo de la carta aleatorio).
+        - Domino: Elige una pieza de domino en base a la luminosidad de dos pixeles adyacentes.
+    Modo de color:
+        - Sin color: No se asigna color a la letra. Usar con Luminosidad, Poker o Domino si solo se quiere usar
+        el caracter para representar su luminosidad.
+        - Color: Asigna un color a la letra.
+        - Grises: Convierte la imagen a escala de grises.
+        - En el caso de Color y Grises se coloca un fondo negro y se invierte la luminosidad del caracter a usar
+        (en caso de Luminosidad, Poker o Domino) para mejorar el contraste.
+    Cuantización: Restringe el número de tonos por canal.
+    Adicionalmente se tienen los controles para los filtros de escala de grises y de cuantizacion.
+    Para guardar el HTML resultante, primero se debe procesar el filtro con "Procesar Filtro" y luego presionar "Guardar HTML".
 
 ## Implementacion
 
@@ -60,3 +78,14 @@ Se implemento una clase ImageProcessor que se encarga de inicializar los filtros
 
 Se implementó una clase base BaseFilter de la cual heredan todos los filtros que se implementan. Cada filtro implementa su procesamiento
 de los pixeles e inicializa sus controles de UI en caso de tener.
+
+### Implementacion de Filtro de Sopa de Letras
+
+Para el filtro de sopa de letras, primero se preprocesa la imagen de entrada. La imagen de entrada reduce su tamaño de acuerdo al numero de pixeles
+por letra por cuestiones de rendimiento. Luego se le aplican los filtros aplicables y la imagen resultante sirve de buffer de color (esta misma imagen
+se muestra tambien como previsualizacion). Para generar el HTML resultante se toman muestras de color de este buffer y se eligen los caracteres
+de acuerdo a las especificaciones del usuario.
+
+Para los casos de Poker y Domino se utilizan los caracteres UNICODE para que los caracteres se muestren independientemente de cualquier fuente,
+siempre que dicha fuente tenga implementados los glifos correspondientes. El HTML se genera usando la fuente "Segoe UI Symbol" en caso de elegir
+Poker o Domino.

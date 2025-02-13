@@ -1,4 +1,7 @@
 import java.util.Random;
+import java.awt.Frame;
+import java.awt.FileDialog;
+import java.io.*;
 
 /***
 *  Filtro sopa de letras
@@ -216,79 +219,81 @@ public class SopaLetrasFilter extends BaseFilter
         
         //Por alguna razon es mas rápido hacer la construccion del texto aqui
         //en vez de en pixelProcessing
-        if(location < output.pixels.length)
+        if(location >= output.pixels.length)
         {
-          String c = "M";
+          break;
+        }
+        
+        String c = "M";
+        
+        //Si se usa modo de frase, iterar sobre las letras de la frase
+        if(textMode == 0)
+        {
+          c = Character.toString(sample.charAt(counter));
+          //Aumentar contador
+          counter ++;
+          counter = counter % sampleLength;
+        }
+        //De otro modo tomar un caracter en base a la luminosidad del color
+        else
+        { 
+          float k = grayscale(output.pixels[location]);
           
-          //Si se usa modo de frase, iterar sobre las letras de la frase
-          if(textMode == 0)
+          int cociente = textMode == 1? luminosidad.length(): 
+                          textMode == 2? suits[0].length :
+                          textMode == 3? dominos[0].length : 1;
+          //Similar a la cuantizacion
+          float i = quantizeValue(k, cociente, 255);
+          
+          //Si se usan colores, invertir la luminosidad (caracter a elegit) por cuestiones de contraste con
+          //el fondo negro
+          if(colorMode > 0)
           {
-            c = Character.toString(sample.charAt(counter));
-            //Aumentar contador
-            counter ++;
-            counter = counter % sampleLength;
+            i = cociente - i -1;
           }
-          //De otro modo tomar un caracter en base a la luminosidad del color
-          else
-          { 
-            float k = grayscale(output.pixels[location]);
+          
+          //Si se usa el modo luminosidad, tomar de la cadena "MNH#QAO0Y2$%+. "
+          if(textMode == 1)
+          {
+            c = Character.toString(luminosidad.charAt((int)i));
+          }
+          //Si se usa el modo poker, tomar una carta del valor adecuado y de uno de los suits al azar
+          else if(textMode == 2)
+          {
+            int rnd = (int) (rand.nextDouble() * 4);
+            c = new String(Character.toChars(suits[rnd][(int)i]));
+          }
+          //Si se usa el modo domino, samplear el pixel de abajo para elegir un domino
+          //vertical adecuado
+          else if(textMode == 3)
+          {
+            int y2 = y + 1;
+            y2 = y2 >= output.height ? output.height -1 : y2;
             
-            int cociente = textMode == 1? luminosidad.length(): 
-                            textMode == 2? suits[0].length :
-                            textMode == 3? dominos[0].length : 1;
-            //Similar a la cuantizacion
-            float i = quantizeValue(k, cociente, 255);
+            int l2 = pixelLocation(x,y2, output.width);
+            l2 = l2 >= output.pixels.length? output.pixels.length - 1 : l2;
             
-            //Si se usan colores, invertir la luminosidad (caracter a elegit) por cuestiones de contraste con
-            //el fondo negro
+            float k2 = grayscale(output.pixels[l2]);
+            float i2 = quantizeValue(k2, cociente, 255);
+            
+            //Invertir en fondo oscuro
             if(colorMode > 0)
             {
-              i = cociente - i -1;
+              i2 = cociente - i2 -1;
             }
             
-            //Si se usa el modo luminosidad, tomar de la cadena "MNH#QAO0Y2$%+. "
-            if(textMode == 1)
-            {
-              c = Character.toString(luminosidad.charAt((int)i));
-            }
-            //Si se usa el modo poker, tomar una carta del valor adecuado y de uno de los suits al azar
-            else if(textMode == 2)
-            {
-              int rnd = (int) (rand.nextDouble() * 4);
-              c = new String(Character.toChars(suits[rnd][(int)i]));
-            }
-            //Si se usa el modo domino, samplear el pixel de abajo para elegir un domino
-            //vertical adecuado
-            else if(textMode == 3)
-            {
-              int y2 = y + 1;
-              y2 = y2 >= output.height ? output.height -1 : y2;
-              
-              int l2 = pixelLocation(x,y2, output.width);
-              l2 = l2 >= output.pixels.length? output.pixels.length - 1 : l2;
-              
-              float k2 = grayscale(output.pixels[l2]);
-              float i2 = quantizeValue(k2, cociente, 255);
-              
-              //Invertir en fondo oscuro
-              if(colorMode > 0)
-              {
-                i2 = cociente - i2 -1;
-              }
-              
-              c = new String(Character.toChars(dominos[(int)i][(int)i2]));
-            }
+            c = new String(Character.toChars(dominos[(int)i][(int)i2]));
           }
+        }
  
-          //Si se usa modo a color o a blanco/negro (grises), establecer un color a la letra
-          if(colorMode != 0)
-          {
-            line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";
-          }
-          //De otro modo simplemente agregar la letra
-          else {
-            line += c;
-          }
+        //Si se usa modo a color o a blanco/negro (grises), establecer un color a la letra
+        if(colorMode != 0)
+        {
+          line += "<span style=\"color:#" + hex(output.pixels[location], 6)+"\">" + c + "</span>";
+        }
+        //De otro modo simplemente agregar la letra
+        else {
+          line += c;
         }
         //output.pixels[location] = pixelProcessing(x, y, location, input.pixels);
       }
@@ -376,20 +381,40 @@ public class SopaLetrasFilter extends BaseFilter
     
   }
   
+  //Guarda el html generado
   private void guardarHTML()
   {
-    saveStrings("sopa_letras.html", new String[] {outputHTML});
-  }
-  
-  public void validateOutputText(File output)
-  {
-    if(output == null)
+    //Ventana de dialogo para elegir ubicacion
+    Frame frame = new Frame();
+    FileDialog dialog = new FileDialog(frame, "Elige el destino para el archivo HTML", FileDialog.SAVE);
+    dialog.setVisible(true);
+    
+    String dir = dialog.getDirectory();
+    String file = dialog.getFile();
+    
+    //Verificar que se haya elegido
+    if(dir == null || file == null)
     {
-      println("No se eligio ningun archivo de salida");
+      println("No se eligió ningun destino");
+      frame.dispose();
       return;
     }
     
-    String path = output.getAbsolutePath();
+    //Guardar archivo
+    File fileToSave = new File(dir, file);
     
+    if (!fileToSave.getName().endsWith(".html")) {
+      fileToSave = new File(fileToSave.getAbsolutePath() + ".html");
+    }
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+      writer.write(outputHTML);
+      println("File saved successfully!");
+    } 
+    catch (IOException e) {
+      println("Error saving file: " + e.getMessage());
+    }
+    
+    frame.dispose();
   }
 }
