@@ -55,7 +55,7 @@ Filtros implementados:
     - Niveles RGB
 - Tarea 2 (```FiltroSopaLetras.pde```)
     - Filtro Sopa de Letras:
-    Tamaño de letra: Numero de pixeles que cada letra cubre.
+    Tamaño de letra: Numero de pixeles que cada letra cubre. Entre más chica mas tarda el procesamiento.
     Modos de Texto:
         - Texto: Repite una letra o frase para construir la imagen.
         - Luminosidad: Elige una letra de la cadena 'MNH#QAO0Y2$%+. ' en base a la luminosidad del pixel
