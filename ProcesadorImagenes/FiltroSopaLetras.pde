@@ -407,7 +407,7 @@ public class SopaLetrasFilter extends BaseFilter
       fileToSave = new File(fileToSave.getAbsolutePath() + ".html");
     }
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileToSave), "UTF-8"))) {
       writer.write(outputHTML);
       println("File saved successfully!");
     } 
