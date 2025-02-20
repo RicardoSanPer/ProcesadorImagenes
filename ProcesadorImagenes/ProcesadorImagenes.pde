@@ -37,7 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
-  
+  img.addFilter(new RmvAguaFilter());
   img.addFilter(new MosaicFilter());
   img.addFilter(new GrayScaleFilter());
   img.addFilter(new RedFilter());
