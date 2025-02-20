@@ -71,6 +71,10 @@ Filtros implementados:
     Cuantización: Restringe el número de tonos por canal.
     Adicionalmente se tienen los controles para los filtros de escala de grises y de cuantizacion.
     Para guardar el HTML resultante, primero se debe procesar el filtro con "Procesar Filtro" y luego presionar "Guardar HTML".
+- Tarea 3 (```FiltroMarcaAgua.pde```)
+    Filtro que remueve marcas de agua:
+    - Asume que la imagen es a blanco y negro, y la marca de agua esta dada por un color prominente (ie texto rojo y semitransparente sobre la imagen).
+    - Devuelve una imagen a blanco y negro con una aproximación de la marca de agua removida.
 
 ## Implementacion
 
