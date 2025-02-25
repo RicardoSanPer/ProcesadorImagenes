@@ -16,7 +16,7 @@
 
 public class RecursiveFilter extends BaseFilter
 {
-  //Tamaño de letra. 1 = 1 letra por pixel
+  //Tamaño del mosaico de la imagen original y recursivo
   CustomNumberController kernelSize;
   CustomNumberController subimgSize;
   //Toggles
