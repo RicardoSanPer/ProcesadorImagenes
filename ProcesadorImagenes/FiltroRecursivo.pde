@@ -1,3 +1,19 @@
+/*
+*  Filtro recursivo.
+*  Toma la imagen original y crea dos buffers:
+*  1) Buffer de color. Efectivamente la imagen "original" que contiene los colores que cada imagen recursiva usará
+*  2) Buffer de valor. Efectivemente la imagen recursiva. A blanco y negro para obtener mejores colores
+*  
+*  Posteriormente crea una imagen de salida cuyas dimensiones se obitenen multiplicando las dimensiones del buffer de
+*  color y el buffer de valor.
+*  
+*  Iterando sobre cada pixel de la imagen de salida, toma como muestra el color del buffer de color que le corresponde
+*  (color del pixel de la imagen "original" correspondiente) y el valor del buffer de valor (pixel de la imagen recursiva que le corresponde)
+*  y los multiplica para obtener el color resultante. Puesto que es una multiplicación la imagen resultante puede verse mas
+*  oscura que la oriinal.
+*
+*/
+
 public class RecursiveFilter extends BaseFilter
 {
   //Tamaño de letra. 1 = 1 letra por pixel
