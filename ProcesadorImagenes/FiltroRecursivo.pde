@@ -16,7 +16,7 @@
 
 public class RecursiveFilter extends BaseFilter
 {
-  //Tamaño del mosaico de la imagen original y recursivo
+  //Tamaño del mosaico de la imagen original y recursivo  
   CustomNumberController kernelSize;
   CustomNumberController subimgSize;
   //Toggles
@@ -50,7 +50,15 @@ public class RecursiveFilter extends BaseFilter
     return color(0,0,0);
   }
   
-  
+  /**
+  *  Procesamiento de la imagen
+  *  1. Crea un buffer de color para facilitar el muestreo de color
+  *  2. Crea un buffer de valor para facilitar el muestreo de la imagen "original"
+  *  3. Crea una imagen de salida con las dimensiones apropiadas
+  *  4. Aplica filtros a los buffers
+  *  5. Establece el color de cada pixel en la imagen de salida tomando muestras de
+  *    los buffers
+  */
   
   public void ProcessImage(PImage input, PImage output)
   {
