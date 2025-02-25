@@ -75,6 +75,18 @@ Filtros implementados:
     Filtro que remueve marcas de agua:
     - Asume que la imagen es a blanco y negro, y la marca de agua esta dada por un color prominente (ie texto rojo y semitransparente sobre la imagen).
     - Devuelve una imagen a blanco y negro con una aproximación de la marca de agua removida.
+- Tarea 4 (```FiltroRecursivo.pde```)
+    Filtro que recrea la imagen recursivamente.
+    - Tamaño Mosaico (Imagen Original): Tamaño de mosaico que se usará para la imagen original. Reduce el numero de imagenes
+    recursivas ("resolución") que tendrá la imagen final.
+    - Tamaño Mosaico (Imagen Recursiva): Tamaño de mosaico que se usará para la imagen recursiva. Reduce la resolución de las
+    imagenes recursivas.
+    - Grises: La imagen resultante será a blanco y negro.
+    - Cuantización: Reduce la paleta de colores (tonos por canal). Usar 6 tonos por canal para obtener la paleta web (216 tonos en total). 
+    La cuantización se aplicará tambien a las imagenes recursivas.
+
+    ** Puesto que se preserva la relación de dimensiones para las imagenes recursivas, puede que las imagenes resultantes tengan una relación de dimensiones exagerada.
+    
 
 ## Implementacion
 
@@ -93,3 +105,13 @@ de acuerdo a las especificaciones del usuario.
 Para los casos de Poker y Domino se utilizan los caracteres UNICODE para que los caracteres se muestren independientemente de cualquier fuente,
 siempre que dicha fuente tenga implementados los glifos correspondientes. El HTML se genera usando la fuente "Segoe UI Symbol" en caso de elegir
 Poker o Domino.
+
+### Implementación de Filtro Recursivo
+
+Para el filtro recursivo se utilizó una implementación similar al filtro de sopa de letras. Se crea un buffer de color del cual se determina
+el color de cada "pixel" o imagen recursiva en la imagen resultante.  Se crea tambien un buffer de valor que es la imagen a repetir (a blanco y negro).
+
+La imagen resultante tiene una resolución con dimensiones equivalentes al producto de las dimensiones de los buffers. Para crear la imagen,
+se toma la coordenada de la imagen de salida, y su modulo respecto las dimensiones del buffer de valor nos da la coordenada del pixel del buffer de valor a
+usar (permitiendo repetir la imagen recursiva), mientras su cociente con las dimensiones del buffer de color nos da la coordenada del pixel del
+buffer de color con el color a usar (permitiendonos pintar la imagen recursiva "actual" del color correspondiente del pixel en la imagen original).
