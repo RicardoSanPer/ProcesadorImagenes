@@ -1,4 +1,4 @@
-  import controlP5.*;
+import controlP5.*;
 
 ControlP5 p5;
 UIManager ui;
@@ -37,6 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new QuantizeFilter());
   img.addFilter(new RecursiveFilter());
   img.addFilter(new RmvAguaFilter());
   img.addFilter(new MosaicFilter());
@@ -48,7 +49,6 @@ void setupFilters()
   img.addFilter(new BrightnessFilter());
   img.addFilter(new RGBLevelsFilter());
   //img.addFilter(new InvertFilter());
-  //img.addFilter(new QuantizeFilter());
   img.addFilter(new SopaLetrasFilter());
   //img.addFilter(new BaseConvolucion()); //Filtro base de convolución (media ineficiente)
   img.addFilter(new EfficientBlurFilter());
