@@ -294,7 +294,7 @@ public class DitherFilter extends BaseFilter
       else if(modo == 6)
       {
         kernel = diffuse_jjn;
-        kernelFactor = 1.0/42;
+        kernelFactor = 1.0/48;
       }
       
       //Aplicar kernel de difusion. Similar a convolucion
