@@ -60,6 +60,10 @@ public class QuantizeFilter extends BaseFilter
 /**
 *
 *  DITHERING
+*
+*  Aplica diferentes metodos de dithering
+*
+*
 */
 
 public class DitherFilter extends BaseFilter
@@ -122,21 +126,29 @@ public class DitherFilter extends BaseFilter
     imageHeight = input.height;
     tonos = filtroq.GetNumberTones();
     int modo = (int)modoDither.getValue();
+    
+    //Buffer de preprocesamiento
     PImage buffer = createImage(input.width, input.height, RGB);
+    //"copia" la imagen original al buffer
     resizeImage(input, buffer, 1, 1);
+    
+    //Agrega ruido a la imagen si se usa dithering aleatorio
     if(modo == 0)
     {
       addNoise(buffer, buffer);
     }
+    //Aplicar blanco/negro
     if(useBN.getBooleanValue())
     {
       filtrobn.ProcessImage(buffer, buffer);
     }
     
+    //Aplicar dither aleatorio
     if(modo == 0)
     {
       filtroq.ProcessImage(buffer, output);
     }
+    //aplicar dither ordenado
     else if(modo == 1 || modo == 2)
     {
       buffer.loadPixels();
@@ -151,11 +163,12 @@ public class DitherFilter extends BaseFilter
       }
       output.updatePixels();
     }
+    //Aplicar dither por difusion
     else
     {
       buffer.loadPixels();
       output.loadPixels();
-      //Aplicar difusión
+      //Aplicar difusión primero
       for(int y = 0; y < output.height; y++)
       {
         for(int x = 0; x < output.width; x++)
@@ -193,7 +206,7 @@ public class DitherFilter extends BaseFilter
     }
     output.updatePixels();
   }
-  
+  //Numero aleatorio entre -1 y 1
   private float randomColor()
   {
     return (random.nextFloat() * 2) - 1; 
@@ -247,6 +260,7 @@ public class DitherFilter extends BaseFilter
     float ge = getError(g, factor);
     float be = getError(b, factor);
     
+    //Ubicacion del pixel al cual propagar el error
     int l2 = l;
     
     //Difusion simple (lineal)
@@ -276,6 +290,7 @@ public class DitherFilter extends BaseFilter
         kernel = diffuse_fake;
         kernelFactor = 1.0/8;  
       }
+      //JJ&N
       else if(modo == 6)
       {
         kernel = diffuse_jjn;
@@ -315,6 +330,7 @@ public class DitherFilter extends BaseFilter
     //return color(r,g,b);
   }
   
+  //error de un valor y el valor al cual es cuantizado
   private float getError(float v, float factor)
   {
     float quantizedSample = (quantizeValue(v, tonos , 255) * factor);

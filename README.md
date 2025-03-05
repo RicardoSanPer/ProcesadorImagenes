@@ -86,6 +86,18 @@ Filtros implementados:
     La cuantización se aplicará tambien a las imagenes recursivas.
 
     ** Puesto que se preserva la relación de dimensiones para las imagenes recursivas, puede que las imagenes resultantes tengan una relación de dimensiones exagerada.
+- Tarea 5(```FiltroDithering.pde```)
+    Filtro que implementa los algoritmos de dither:
+    - Azar
+    - Ordenado (2x2)
+    - Ordenado (4x4)
+    - Difusión Simple
+    - Floyd-Steinberg
+    - Floyd-Steinberg falso
+    - Jarvis, Judice, y Ninke
+
+    **Debido al tamaño de la imagen de previsualizacion es posible que no se pueda apreciar el resultado del dithering en el programa, pero se puede ver
+    guardando y abriendo la imagen resultante en un programa externo.
     
 
 ## Implementacion
@@ -115,3 +127,12 @@ La imagen resultante tiene una resolución con dimensiones equivalentes al produ
 se toma la coordenada de la imagen de salida, y su modulo respecto las dimensiones del buffer de valor nos da la coordenada del pixel del buffer de valor a
 usar (permitiendo repetir la imagen recursiva), mientras su cociente con las dimensiones del buffer de color nos da la coordenada del pixel del
 buffer de color con el color a usar (permitiendonos pintar la imagen recursiva "actual" del color correspondiente del pixel en la imagen original).
+
+## Implementación de Dithering
+
+Para los algoritmos de dithering se implementó tal que el dithering pueda aplicarse entre cualesquiera dos tonos arbirtrarios. Particularmente para
+el algoritmo de dithering ordenado se logró usando el error para determinar si un color usa su valor cuantizado, o el valor cuantizado "anterior" o "siguiente".
+Entonces el filtro funciona para cualquier numero de tonos.
+
+El filtro se implementó para que el dithering se pueda aplicar a un valor cualquiera (como el filtro de cuantización), por lo que puede utilizarse para
+generar imagenes a color o blanco y negro.
