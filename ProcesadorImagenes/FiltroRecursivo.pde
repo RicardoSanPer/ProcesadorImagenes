@@ -85,7 +85,6 @@ public class RecursiveFilter extends BaseFilter
     if(useQ.getBooleanValue())
     {
       //Realizar dithering en los tres canales con el mismo valor cuando es imagen a blanco y negro
-      filtroq.SetSingleChannelRandom(useBN.getBooleanValue());
       filtroq.ProcessImage(colorBuffer, colorBuffer);
       filtroq.ProcessImage(valueBuffer, valueBuffer);
     }

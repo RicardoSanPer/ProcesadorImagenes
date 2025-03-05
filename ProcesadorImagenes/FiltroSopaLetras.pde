@@ -161,7 +161,6 @@ public class SopaLetrasFilter extends BaseFilter
     if(useQ.getBooleanValue())
     {
       //Realizar dithering en los tres canales con el mismo valor cuando es imagen a blanco y negro
-      filtroq.SetSingleChannelRandom(modoColor.getValue() == 2 || textMode != 0);
       filtroq.ProcessImage(output, output);
     }
     

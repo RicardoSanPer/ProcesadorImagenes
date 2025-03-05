@@ -37,6 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new DitherFilter());
   img.addFilter(new QuantizeFilter());
   img.addFilter(new RecursiveFilter());
   img.addFilter(new RmvAguaFilter());
@@ -114,7 +115,7 @@ void validateOutput(File output)
   //Si el usuario no especificó un formato de imagen (PGN o JPG), asignar JPG por defecto
   if(!path.toLowerCase().endsWith(".png") && !path.toLowerCase().endsWith(".jpg"));
   {
-    path += ".jpg";
+    path += ".png";
   }
   img.SaveProcessed(path);
 }

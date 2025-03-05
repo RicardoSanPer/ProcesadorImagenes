@@ -91,7 +91,7 @@ public class RmvAguaFilter extends BaseFilter
       }
     }
     //Se obtiene el valor medio
-    redMid = (redHigh - redLow)/2;
+    redMid = (redHigh - redLow)/2.0;
     
     //Filtro para reducir/eliminar el rojo
     for(int y = 0; y < imageHeight; y++)

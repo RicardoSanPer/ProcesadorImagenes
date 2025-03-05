@@ -96,7 +96,7 @@ public class ImageProcessor
       for(int j = 0; j < base.width; j++)
       {
         int location = i * base.height + j;
-        if(location < processed.pixels.length)
+        if(location < base.pixels.length)
         {
           processed.pixels[location] = base.pixels[location];
         }
