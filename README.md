@@ -96,7 +96,7 @@ Filtros implementados:
     - Floyd-Steinberg falso
     - Jarvis, Judice, y Ninke
 
-    **Debido al tamaño de la imagen de previsualizacion es posible que no se pueda apreciar el resultado del dithering en el programa, pero se puede ver
+    **Debido al tamaño de la imagen de previsualizacion es posible que no se pueda apreciar el resultado correcto del dithering en el programa, pero se puede ver
     guardando y abriendo la imagen resultante en un programa externo.
     
 
