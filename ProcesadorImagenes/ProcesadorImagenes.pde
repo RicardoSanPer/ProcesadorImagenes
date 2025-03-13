@@ -37,6 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new SolarFilter());
   img.addFilter(new DitherFilter());
   img.addFilter(new QuantizeFilter());
   img.addFilter(new RecursiveFilter());

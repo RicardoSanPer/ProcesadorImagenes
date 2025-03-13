@@ -12,7 +12,7 @@ public class QuantizeFilter extends BaseFilter
   
   public QuantizeFilter()
   {
-    super("Cuantizacion");
+    super("Posterizacion");
   }
   
   public QuantizeFilter(String n)
@@ -41,7 +41,7 @@ public class QuantizeFilter extends BaseFilter
   
   protected void setupControls(ControlP5 p5)
   {
-    controls.setLabel("Controles de Quantizacion");
+    controls.setLabel("Controles de Posterizacion");
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
