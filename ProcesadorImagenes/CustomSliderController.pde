@@ -79,6 +79,7 @@ public class CustomSliderController
   public void SetValue(float val)
   {
     slider.setValue(val);
+    updateSlider();
   }
   
   /*

@@ -55,6 +55,11 @@ public class QuantizeFilter extends BaseFilter
   {
     return slider.GetValue();
   }
+  
+  public void SetNumberTones(float n)
+  {
+    slider.SetValue(n);
+  }
 }
 
 /**

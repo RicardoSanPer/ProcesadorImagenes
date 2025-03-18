@@ -37,9 +37,11 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new DiceFilter());
   img.addFilter(new SolarFilter());
-  img.addFilter(new DitherFilter());
   img.addFilter(new QuantizeFilter());
+  img.addFilter(new SemiCirclesFilter());
+  img.addFilter(new DitherFilter());
   img.addFilter(new RecursiveFilter());
   img.addFilter(new RmvAguaFilter());
   img.addFilter(new MosaicFilter());

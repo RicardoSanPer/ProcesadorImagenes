@@ -279,7 +279,7 @@ public class BaseConvolucion extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    sizek = new CustomNumberController(controls, p5, "KernelX" + name, "Tamaño", 20);
+    sizek = new CustomNumberController(controls, p5, "KernelX" + name, "Tamaño", 2);
     
     sizek.SetValue(5);
   }

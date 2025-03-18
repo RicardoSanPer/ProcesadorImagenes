@@ -21,6 +21,10 @@ public class EfficientBlurFilter extends BaseConvolucion
   {
     super("Media (Eficiente)");
   }
+  public EfficientBlurFilter(String n)
+  {
+    super("Media (Eficiente)" + n);
+  }
   public void ProcessImage(PImage input, PImage output)
   {
     //Actualiza el kernel (si se cambio su tamaño)
