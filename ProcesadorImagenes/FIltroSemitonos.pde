@@ -357,7 +357,7 @@ public class DiceFilter extends BaseFilter
     PVector nvector = new PVector(red(normal)-128, green(normal)-128, blue(normal)-128);
     nvector.normalize();
     //Intensidad de la luz
-    float d = lightPos.dot(nvector);
+    float d = lightPos.dot(nvector) * (intensidadLuz.GetValue() / 100);
     
     
     //Calculo de Brillo especular
@@ -373,8 +373,8 @@ public class DiceFilter extends BaseFilter
     h.add(view);
     h.normalize();
     //Especular
-    float s = pow(max(0, nvector.dot(h)), suavidad.GetValue()) * (255 * (intensidadLuz.GetValue() / 100));
-    s *= intensidadBrillo.GetValue() / 100;
+    float s = pow(max(0, nvector.dot(h)), suavidad.GetValue());
+    s *= (intensidadBrillo.GetValue() / 100) * 255;
     
     //Calcular color
     float r = lerp(red(color1), red(color2), colort) * d;
@@ -482,7 +482,7 @@ public class DiceFilter extends BaseFilter
     //Intensidad de la luz
     intensidadLuz = new CustomSliderController(controls, p5, "LightIntensity" + name, "Intensidad Luz", 130);
     intensidadLuz.SetRange(0, 100);
-    intensidadLuz.SetValue(50);
+    intensidadLuz.SetValue(100);
     
     //Suavidad de la intensidad
     suavidad = new CustomSliderController(controls, p5, "Smoothness" + name, "Suavidad de Superficie", 170);
