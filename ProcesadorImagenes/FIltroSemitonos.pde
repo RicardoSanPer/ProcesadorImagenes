@@ -75,7 +75,14 @@ public class SemiCirclesFilter extends BaseFilter
   CustomNumberController kernelSize;
   //Indica el numero de pixeles que cada circulo cubre en la imagen original
   CustomNumberController cellSize;
+  //Tipo de semitono
+  ScrollableList modo;
   
+  float[][] kernel3_3 = {{6, 8, 4},
+                         {1, 0, 3},
+                         {5, 2, 7}};
+  float[][] kernel2_2 = {{0,2},
+                        {3,1}};
   
   QuantizeFilter filtroq;
   
@@ -99,16 +106,34 @@ public class SemiCirclesFilter extends BaseFilter
   {
     int lx = x % circle.height;
     int ly = y % circle.height;
-    int loc = pixelLocation(lx, ly, circle.width);
-    
-    float r = kernelSize.GetValue();
-    
-    float v = red(circle.pixels[loc]);
     
     int lc = pixelLocation((int)(x / circle.height), (int)(y / circle.height), colorBuffer.width);
-    float k = red(colorBuffer.pixels[lc]);
     
-    if(k < v)
+    int loc = pixelLocation(lx, ly, circle.width);
+    float k = grayscale(colorBuffer.pixels[lc]);
+    float v = red(circle.pixels[loc]);
+    
+    if(modo.getValue() == 0)
+    {
+      if(k < v)
+      {
+        return color(0,0,0);
+      }
+      return color(255,255,255);
+    }
+    int kx = x / circle.height;
+    int ky = y / circle.height;
+    
+    float kv = quantizeValue(k, 10, 255);
+    float sample = kernel3_3[ky%3][kx%3];
+    
+    //Ajustar valores si se usa el semitono de circulos en patron de 2x2
+    if(modo.getValue() == 1)
+    {
+      sample = kernel2_2[ky%2][kx%2];
+      kv = floor(kv / 2);
+    }
+    if(kv <= sample && v > 0)
     {
       return color(0,0,0);
     }
@@ -142,13 +167,15 @@ public class SemiCirclesFilter extends BaseFilter
   public void ProcessImage(PImage input, PImage output)
   {
     int cSize = (int) cellSize.GetValue();
-    int r = (int) kernelSize.GetValue();
     
     //Crear circulo del tamaño adecuado
     createCircle();
     //Crear buffer de color
     resizeImage(input, colorBuffer, cSize, cSize);
-    filtroq.ProcessImage(colorBuffer, colorBuffer);
+    if(modo.getValue() == 0)
+    {
+      filtroq.ProcessImage(colorBuffer, colorBuffer);
+    }
     //filtroq.ProcessImage(circle, circle);
     //Cambiar tamaño de salida a color apropiado
     output.resize(colorBuffer.width * circle.height, colorBuffer.height * circle.height);
@@ -189,8 +216,20 @@ public class SemiCirclesFilter extends BaseFilter
     filtroq.GetGroup().setGroup(controls);
     filtroq.GetGroup().setPosition(0,120);
     filtroq.GetGroup().show();
-    
     filtroq.SetNumberTones(16);
+    
+    modo = new ScrollableList(p5, "SemiCircleTonesMode");
+    modo.getCaptionLabel().setText("Modo");
+    modo.setPosition(140, 20);
+    modo.setWidth(80);
+    modo.setBarHeight(20);
+    modo.addItem("Circulos",modo);
+    modo.addItem("Circulos 2x2",modo);
+    modo.addItem("Circulos 3x3",modo);
+    modo.setValue(0);
+    modo.setGroup(controls);
+    modo.setItemHeight(20);
+    modo.close();
   }
   
 }
@@ -216,6 +255,14 @@ public class SemiCirclesFilter extends BaseFilter
 public class DiceFilter extends BaseFilter
 {
   CustomNumberController cellSize;
+  Toggle invert;
+  Knob directionKnob;
+  Knob heightKnob;
+  CustomSliderController intensidadLuz;
+  CustomSliderController suavidad;
+  CustomSliderController intensidadBrillo;
+  ColorWheel colorpicker1;
+  ColorWheel colorpicker2;
   
   //Color de los puntos
   int color1 = color(255,255,255);
@@ -278,6 +325,13 @@ public class DiceFilter extends BaseFilter
     
     //Cuantizar para determina cual dado usar
     float k = grayscale(colorBuffer.pixels[lc]);
+    
+    //Invertir color
+    if(invert.getBooleanValue())
+    {
+      k = 255-k;
+    }
+    
     int i = (int)quantizeValue(k, 7, 255);
     
     //Posicion del pixel correspondiente en el dado
@@ -319,7 +373,8 @@ public class DiceFilter extends BaseFilter
     h.add(view);
     h.normalize();
     //Especular
-    float s = pow(max(0, nvector.dot(h)), 12) * 255;
+    float s = pow(max(0, nvector.dot(h)), suavidad.GetValue()) * (255 * (intensidadLuz.GetValue() / 100));
+    s *= intensidadBrillo.GetValue() / 100;
     
     //Calcular color
     float r = lerp(red(color1), red(color2), colort) * d;
@@ -335,11 +390,26 @@ public class DiceFilter extends BaseFilter
   
   public void ProcessImage(PImage input, PImage output)
   {
+    color1 = colorpicker1.getRGB();
+    color2 = colorpicker2.getRGB();
+    
     int size = (int)cellSize.GetValue();
     //Crear buffer de color
     resizeImage(input, colorBuffer, size, size);
     //Cambiar tamaño de salida
     output.resize(colorBuffer.width * 64, colorBuffer.height * 64);
+    
+    float angle = directionKnob.getValue() / 360;
+    angle *= PI * 2;
+    
+    float h = (90 - heightKnob.getValue())/360;
+    h *= PI / 2;
+    
+    
+    
+    lightPos.x = cos(angle) * sin(h);
+    lightPos.y = sin(angle) * sin(h);
+    lightPos.z = cos(h);
     
     lightPos.normalize();
     
@@ -376,8 +446,61 @@ public class DiceFilter extends BaseFilter
     controls.setSize(200, 400);
     controls.setPosition(width - 250, 30);
     
-    cellSize = new CustomNumberController(controls, p5, "SemiCellSize" + name, "Tamaño Celda", 60);
+    cellSize = new CustomNumberController(controls, p5, "SemiCellSize" + name, "Tamaño Celda", 20);
     cellSize.SetValue(10); 
     
+    //Direccion de la luz
+    directionKnob = new Knob(p5, "DiceLightDirection");
+    directionKnob.setPosition(5, 50);
+    directionKnob.setAngleRange(2 * PI);
+    directionKnob.setStartAngle(0);
+    directionKnob.setViewStyle(Knob.LINE);
+    directionKnob.setRange(0,360);
+    directionKnob.getCaptionLabel().setText("Dirección");
+    directionKnob.setShowAngleRange(false);
+    directionKnob.getValueLabel().hide();
+    directionKnob.setGroup(controls);
+    
+    invert = new Toggle(p5, "InvertDice");
+    invert.setPosition(150, 20);
+    invert.getCaptionLabel().setText("Invertir Brillo");
+    invert.setGroup(controls);
+    
+    //Altura de la luz
+    heightKnob = new Knob(p5, "DiceLightHeight");
+    heightKnob.setPosition(65, 50);
+    heightKnob.setAngleRange(PI/2);
+    heightKnob.setStartAngle(PI);
+    heightKnob.setViewStyle(Knob.LINE);
+    heightKnob.setRange(0,90);
+    heightKnob.getCaptionLabel().setText("Altura");
+    heightKnob.setShowAngleRange(false);
+    heightKnob.getValueLabel().hide();
+    heightKnob.setValue(45);
+    heightKnob.setGroup(controls);
+    
+    //Intensidad de la luz
+    intensidadLuz = new CustomSliderController(controls, p5, "LightIntensity" + name, "Intensidad Luz", 130);
+    intensidadLuz.SetRange(0, 100);
+    intensidadLuz.SetValue(50);
+    
+    //Suavidad de la intensidad
+    suavidad = new CustomSliderController(controls, p5, "Smoothness" + name, "Suavidad de Superficie", 170);
+    suavidad.SetRange(0, 100);
+    suavidad.SetValue(32);
+    
+    intensidadBrillo = new CustomSliderController(controls, p5, "SmoothnessIntensity" + name, "Intensidad de Brillo", 210);
+    intensidadBrillo.SetRange(0, 100);
+    intensidadBrillo.SetValue(32);
+
+    //Colores
+    colorpicker1 = p5.addColorWheel("DiceColorPicker1", 0, 240, 200);
+    colorpicker1.setGroup(controls);
+    colorpicker1.getCaptionLabel().setText("Color Puntos");
+    
+    colorpicker2 = p5.addColorWheel("DiceColorPicker2", 0, 460, 200);
+    colorpicker2.setGroup(controls);
+    colorpicker2.setRGB(color(0,0,0));
+    colorpicker2.getCaptionLabel().setText("Color Caras");   
   }
 }
