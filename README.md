@@ -29,7 +29,7 @@ El programa se puede ejecutar con el boton ```Run``` ubicado bajo el boton ```Fi
 El programa se puede compilar a un ejecutable en ```File -> Export Application...``` y eligiendo la configuracion de compilación.
 
 El ejecutable se guarda en un directorio nuevo en ```ProcesadorImagenes``` con el nombre del sistema para el cual fue compilado. Dentro
-se encuentra el ejecutable. Adicionalmente se debe copiar manualmente el archivo ```sample.jpg``` al directorio.
+se encuentra el ejecutable. Adicionalmente se debe copiar manualmente el archivo ```sample.jpg``` y la carpeta ```dados``` al directorio.
 
 ## Sobre el programa
 

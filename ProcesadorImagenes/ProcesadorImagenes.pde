@@ -37,6 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new OilFilter());
   img.addFilter(new SemiCirclesFilter());
   img.addFilter(new DiceFilter());
   img.addFilter(new SolarFilter());
