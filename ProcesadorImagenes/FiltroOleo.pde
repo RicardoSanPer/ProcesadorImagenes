@@ -3,6 +3,8 @@ import java.util.Map;
 
 public class OilFilter extends BaseFilter
 {
+  CustomNumberController kernelSize;
+  
   Map<Integer, Integer> frequencies = new HashMap<>(); 
   int size = 6;
   public OilFilter()
@@ -18,6 +20,7 @@ public class OilFilter extends BaseFilter
   protected color pixelProcessing(int x, int y, int l, int[] input)
   {
     frequencies = new HashMap<>();
+    size = (int)kernelSize.GetValue();
     
     //Tomar frecuencias de valores
     for(int i = 0; i < size; i++)
@@ -65,5 +68,14 @@ public class OilFilter extends BaseFilter
     
     return color(kv,kv,kv);
   }
-  
+
+  protected void setupControls(ControlP5 p5)
+  {
+    controls.setLabel("Controles de Oleo");
+    controls.setSize(200, 400);
+    controls.setPosition(width - 250, 30);
+    
+    kernelSize = new CustomNumberController(controls, p5, "OilKernelSize" + name, "Tamaño Kernel", 20);
+    kernelSize.SetValue(3); 
+  }
 }
