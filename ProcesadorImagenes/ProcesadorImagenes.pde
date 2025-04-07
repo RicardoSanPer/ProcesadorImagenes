@@ -37,6 +37,8 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new MaskFilter());
+  img.addFilter(new ATTFilter());
   img.addFilter(new OilFilter());
   img.addFilter(new SemiCirclesFilter());
   img.addFilter(new DiceFilter());
