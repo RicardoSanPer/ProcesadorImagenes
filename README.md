@@ -128,7 +128,10 @@ Filtros implementados:
         de N a 255 al rango [0,255].
     - Posterizacion:
         Limita el numero de tonos por cada canal.
-
+- Tarea 7 y 8 (```FiltroOleo```)
+    - Filtro Oleo: Filtro que reemplaza el pixel por el valor mas frecuente del kernel.
+    - Filtro AT&T: Convierte la imagen a señales basadas en el valor del pixel.
+    - Filtro Mascara: Similar al filtro mosaio, pero usa circulos o estrellas en vez de rectangulos.
 ## Implementacion
 
 Se implemento una clase ImageProcessor que se encarga de inicializar los filtros y procesar las imagenes, y una clase UIManager que se encarga de la UI del programa.
@@ -186,3 +189,13 @@ simulando una luz. El muestreo de las imageens de dados es similar al de los sem
 El filtro solar toma el umbral como "Punto medio" y mapea cada valor a ambos lados a un valor nuevo entro 0 y 255, tal que valores cercanos al umbral sean cercanos a 0 y los valores mas lejanos son 255. Si se aplica el filtro sobre una gradiente de negro a blanco se obtendría una
 gradiente que "rebota" donde el umbral se encuentra. Como consecuencia, si se usa un umbral de
 0 se obtiene la imagen original, y un umbral de 255 invierte los colores.
+
+## Implementación de AT&T
+La imagen se divide en mosaicos verticales con el filtro mosaico y se convierte a blanco y 
+negro, siendo el resultado el buffer de color. Se crea el mismo número de gradientes de blanco a 
+negro que corresponden con los mosaicos verticales que sirve como máscara de señal. Se compara 
+el valor de un pixel en la mascara de señale con el valor correspondiente del buffer de color, y 
+se pinta el pixel ya sea blanco o negro dependiendo del resultado de la comparación.
+
+Puesto que la imagen resultante mantiene las dimensiones de la imagen original, entre más numero 
+de señales menos resolucion (o tonos) se tiene para cada señal individual, dando un efecto similar al de semitonos.
