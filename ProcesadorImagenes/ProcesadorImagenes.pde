@@ -37,6 +37,7 @@ void setupFilters()
 {
   
   //Inicializar filtros
+  img.addFilter(new HistogramFilter());
   img.addFilter(new MaskFilter());
   img.addFilter(new ATTFilter());
   img.addFilter(new OilFilter());
